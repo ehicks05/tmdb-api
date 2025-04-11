@@ -1,6 +1,6 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
 import pThrottle, { type ThrottledFunction } from 'p-throttle';
-import { configureHttp } from '../../utils/configure-http.js';
+import { configureHttp } from './configure-http.js';
 
 configureHttp();
 
