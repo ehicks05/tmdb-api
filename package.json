@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"description": "",
 	"type": "module",
-	"main": "src/app.js",
+	"module": "src/index.js",
 	"scripts": {
 		"test": "vitest"
 	},
