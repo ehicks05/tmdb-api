@@ -20,6 +20,6 @@
 		}
 	},
 	"files": {
-		"include": ["./src/**/*"]
+		"include": ["./src/**/*", "./vitest.config.ts"]
 	}
 }

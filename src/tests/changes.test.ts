@@ -9,7 +9,5 @@ test('changes', { timeout: 10_000 }, async () => {
 
 	const oneChange = ids?.[0];
 
-	console.log(`id count: ${ids?.length}`);
-
 	expect(oneChange).toBeTypeOf('number');
 });
