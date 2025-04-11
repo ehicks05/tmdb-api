@@ -1,15 +1,9 @@
 import { z } from 'zod';
-import {
-	CastCreditSchema,
-	CrewCreditSchema,
-} from '~/services/tmdb/types/credits.js';
-import { GenreSchema } from '~/services/tmdb/types/genre.js';
-import { MovieResponseSchema } from '~/services/tmdb/types/movie.js';
-import {
-	ContentRatingsSchema,
-	ShowResponseSchema,
-} from '~/services/tmdb/types/show.js';
 import { MIN_VOTES } from '../constants.js';
+import { CastCreditSchema, CrewCreditSchema } from '../tmdb/types/credits.js';
+import { GenreSchema } from '../tmdb/types/genre.js';
+import { MovieResponseSchema } from '../tmdb/types/movie.js';
+import { ContentRatingsSchema, ShowResponseSchema } from '../tmdb/types/show.js';
 
 const TrimmedCastCreditSchema = CastCreditSchema.pick({
 	id: true,

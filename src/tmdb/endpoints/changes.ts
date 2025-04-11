@@ -1,12 +1,13 @@
 import { type Interval, format, subDays } from 'date-fns';
 import { intersection, range } from 'lodash-es';
-import { tmdbClient } from '../client/throttledClient.js';
+import type { ThrottledAxiosClient } from '../client/client.js';
 import type { RecentChangesResponse } from '../types/changes.js';
 import { discoverMediaIds } from './discover.js';
 
 export type Resource = 'movie' | 'tv' | 'person';
 
 export const getRecentlyChangedIds = async (
+	client: ThrottledAxiosClient,
 	resource: Resource,
 	interval: Interval = { start: subDays(new Date(), 1), end: new Date() },
 ) => {
@@ -16,14 +17,14 @@ export const getRecentlyChangedIds = async (
 
 	const {
 		data: { total_pages },
-	} = await tmdbClient<RecentChangesResponse>(url, {
+	} = await client<RecentChangesResponse>(url, {
 		params: { start_date, end_date },
 	});
 
 	const pageResults = await Promise.all(
 		range(0, total_pages).map(async (i) => {
 			const page = i + 1;
-			const { data } = await tmdbClient<RecentChangesResponse>(url, {
+			const { data } = await client<RecentChangesResponse>(url, {
 				params: { start_date, end_date, page },
 			});
 			return data.results.map((o) => o.id);
@@ -35,7 +36,7 @@ export const getRecentlyChangedIds = async (
 	// filter using /discover
 	if (resource === 'person') return ids;
 
-	const discoverIds = await discoverMediaIds(resource, true);
+	const discoverIds = await discoverMediaIds(client, resource, true);
 
 	return intersection(ids, discoverIds);
 };

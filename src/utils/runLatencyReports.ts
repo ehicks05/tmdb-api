@@ -1,5 +1,4 @@
-import logger from '~/services/logger.js';
-import { tmdb } from '~/services/tmdb/index.js';
+import { tmdb } from '../tmdb/index.js';
 
 const reportTmdbLatency = async (movieId = 603) => {
 	// warm
@@ -13,5 +12,5 @@ const reportTmdbLatency = async (movieId = 603) => {
 	await tmdb.getMovie(movieId);
 	const end = Date.now();
 	const dur = Math.round((end - start) / 3);
-	logger.info(`tmdb latency: ${dur} ms`);
+	console.log(`tmdb latency: ${dur} ms`);
 };

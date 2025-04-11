@@ -1,4 +1,4 @@
-import type { PersonResponse } from '~/services/tmdb/types/person.js';
+import type { PersonResponse } from '../tmdb/types/person.js';
 
 const isValidPerson = (person: PersonResponse) => person.profile_path;
 
