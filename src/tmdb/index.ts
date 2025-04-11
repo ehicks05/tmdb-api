@@ -1,14 +1,3 @@
-import {
-	asyncWrapper,
-	getGenres,
-	getLanguages,
-	getMovie,
-	getPerson,
-	getProviders,
-	getSeason,
-	getShow,
-} from './endpoints/simple_endpoints.js';
-
 import type { Interval } from 'date-fns';
 import {
 	type ThrottledAxiosClient,
@@ -17,6 +6,16 @@ import {
 } from './client/client.js';
 import { type Resource, getRecentlyChangedIds } from './endpoints/changes.js';
 import { discoverMediaIds } from './endpoints/discover.js';
+import {
+	getGenres,
+	getLanguages,
+	getMovie,
+	getPerson,
+	getProviders,
+	getSeason,
+	getShow,
+} from './endpoints/simple_endpoints.js';
+import { asyncWrapper } from './endpoints/utils.js';
 
 export class TmdbApi {
 	private client: ThrottledAxiosClient | null = null;

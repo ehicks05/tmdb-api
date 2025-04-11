@@ -1,4 +1,3 @@
-import type { AxiosError } from 'axios';
 import type { ZodError } from 'zod';
 import type { ThrottledAxiosClient } from '../client/client.js';
 import { GenreResponseSchema } from '../types/genre.js';
@@ -8,19 +7,6 @@ import { PersonResponseSchema } from '../types/person.js';
 import { ProviderResponseSchema } from '../types/provider.js';
 import { SeasonResponseSchema } from '../types/season.js';
 import { ShowResponseSchema } from '../types/show.js';
-import { logAxiosError } from './utils.js';
-
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const asyncWrapper = <T extends (...args: any[]) => Promise<any>>(fn: T) => {
-	return async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>>> => {
-		try {
-			return await fn(...args);
-		} catch (error) {
-			logAxiosError(error as AxiosError);
-			throw error;
-		}
-	};
-};
 
 export const getMovie = async (client: ThrottledAxiosClient, id: number) => {
 	const append = ['releases', 'credits', 'watch/providers'];

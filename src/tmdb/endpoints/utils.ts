@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios';
 
-export const logAxiosError = (error: AxiosError) => {
+const logAxiosError = (error: AxiosError) => {
 	const { baseURL, url, params } = error.config || {};
 	const config = { baseURL, url, params };
 
@@ -19,4 +19,16 @@ export const logAxiosError = (error: AxiosError) => {
 		// Something happened in setting up the request that triggered an Error
 		console.log({ errorMessage: error.message, config });
 	}
+};
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const asyncWrapper = <T extends (...args: any[]) => Promise<any>>(fn: T) => {
+	return async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>>> => {
+		try {
+			return await fn(...args);
+		} catch (error) {
+			logAxiosError(error as AxiosError);
+			throw error;
+		}
+	};
 };
