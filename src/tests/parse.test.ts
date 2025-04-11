@@ -4,8 +4,6 @@ import { tmdb } from './client.js';
 import { PersonResponseSchema } from '../tmdb/types/person.js';
 import { SeasonResponseSchema } from '../tmdb/types/season.js';
 
-const TMDB_API_KEY = process.env.TMDB_API_KEY;
-
 test('get movie', async () => {
 	const id = 89;
 	const res = await tmdb.getMovie(id);

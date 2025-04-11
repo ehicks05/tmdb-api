@@ -1,5 +1,5 @@
 import pMap from 'p-map';
-import { beforeAll, expect, test } from 'vitest';
+import { expect, test } from 'vitest';
 import { tmdb } from './client.js';
 
 const TMDB_RPS_LIMIT = 40;

@@ -1,8 +1,9 @@
 import type { AxiosError } from 'axios';
-import { pick } from 'lodash-es';
 
 export const logAxiosError = (error: AxiosError) => {
-	const config = pick(error.config, ['baseURL', 'url', 'params']);
+	const { baseURL, url, params } = error.config || {};
+	const config = { baseURL, url, params };
+
 	if (error.response) {
 		// The request was made and the server responded with a status code
 		// that falls out of the range of 2xx

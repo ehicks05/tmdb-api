@@ -1,5 +1,4 @@
 import type { AxiosError } from 'axios';
-import { groupBy } from 'lodash-es';
 import type { ZodError } from 'zod';
 import type { ThrottledAxiosClient } from '../client/client.js';
 import { GenreResponseSchema } from '../types/genre.js';
@@ -90,21 +89,24 @@ const getShowGenres = async (client: ThrottledAxiosClient) => {
 };
 
 export const getGenres = async (client: ThrottledAxiosClient) => {
-	const movieGenres = (await getMovieGenres(client)).map((o) => ({
-		...o,
-		type: 'MOVIE',
-	}));
-	const showGenres = (await getShowGenres(client)).map((o) => ({
-		...o,
-		type: 'SHOW',
-	}));
+	const [_movieGenres, _showGenres] = await Promise.all([
+		getMovieGenres(client),
+		getShowGenres(client),
+	]);
 
-	const genresById = groupBy([...movieGenres, ...showGenres], (o) => o.id);
-	const genres = Object.values(genresById).map((o) =>
-		o.length === 1 ? o[0] : { ...o[0], type: 'BOTH' },
-	);
+	// if a genre exists in both lists, update its type to 'BOTH'
+	const movieGenres = _movieGenres.map((movieGenre) => {
+		const isBoth = _showGenres.some((showGenre) => showGenre.id === movieGenre.id);
+		return { ...movieGenre, type: isBoth ? 'BOTH' : 'MOVIE' };
+	});
+	const movieGenreIds = movieGenres.map((o) => o.id);
 
-	return genres;
+	// remove dupes from showGenres
+	const showGenres = _showGenres
+		.map((o) => ({ ...o, type: 'SHOW' }))
+		.filter((showGenre) => !movieGenreIds.includes(showGenre.id));
+
+	return [...movieGenres, ...showGenres];
 };
 
 export const getLanguages = async (client: ThrottledAxiosClient) => {
