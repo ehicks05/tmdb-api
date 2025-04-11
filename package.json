@@ -1,0 +1,33 @@
+{
+	"name": "tmdb-api",
+	"version": "0.1.0",
+	"description": "",
+	"type": "module",
+	"main": "src/app.js",
+	"scripts": {
+		"test": "vitest"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"agentkeepalive": "^4.6.0",
+		"axios": "^1.8.4",
+		"date-fns": "^4.1.0",
+		"dotenv": "^16.4.7",
+		"lodash-es": "^4.17.21",
+		"log4js": "^6.9.1",
+		"p-map": "^7.0.3",
+		"p-throttle": "^7.0.0",
+		"zod": "^3.24.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@tsconfig/node22": "^22.0.0",
+		"@types/lodash-es": "^4.17.12",
+		"@types/node": "^22.13.11",
+		"tsc-alias": "^1.8.11",
+		"tsx": "^4.19.3",
+		"typescript": "^5.8.2",
+		"vitest": "^3.1.1"
+	}
+}
