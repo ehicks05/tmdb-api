@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { TmdbApi } from '../tmdb/index.js';
+import { TmdbApi } from '../main.js';
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 

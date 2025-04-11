@@ -1,3 +1,3 @@
-import { TmdbApi } from './tmdb/index.js';
+import { TmdbApi } from './main.js';
 
 export { TmdbApi };

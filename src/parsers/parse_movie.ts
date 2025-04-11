@@ -1,4 +1,4 @@
-import type { MovieResponse } from '../tmdb/types/movie.js';
+import type { MovieResponse } from '../types/movie.js';
 import { ValidTrimmedMovieSchema } from './validation.js';
 
 export const parseMovie = (_data: MovieResponse) => {

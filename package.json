@@ -4,6 +4,7 @@
 	"description": "",
 	"type": "module",
 	"module": "src/index.js",
+	"types": "src/index.d.ts",
 	"scripts": {
 		"test": "vitest"
 	},

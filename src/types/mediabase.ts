@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ProductionCompanySchema } from './company.js';
 import { GenreSchema } from './genre.js';
+import { LanguageSchema } from './language.js';
 
 export const MovieStatusEnum = z.enum([
 	'Rumored',
@@ -24,13 +25,6 @@ export type ShowStatusEnum = z.infer<typeof ShowStatusEnum>;
 
 export const MediaStatusEnum = z.union([MovieStatusEnum, ShowStatusEnum]);
 export type MediaStatusEnum = z.infer<typeof MediaStatusEnum>;
-
-export const LanguageSchema = z.object({
-	iso_639_1: z.string(),
-	english_name: z.string(),
-	name: z.string(),
-});
-export type Language = z.infer<typeof LanguageSchema>;
 
 export const ProductionCountrySchema = z.object({
 	iso_3166_1: z.string(),
