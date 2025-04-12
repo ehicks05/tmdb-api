@@ -1,8 +1,7 @@
 import { expect, test } from 'vitest';
 import { ValidMovieSchema, ValidShowSchema } from '../parsers/validation.js';
+import { PersonResponseSchema, SeasonResponseSchema } from '../types/index.js';
 import { tmdb } from './client.js';
-import { PersonResponseSchema } from '../types/person.js';
-import { SeasonResponseSchema } from '../types/season.js';
 
 test('get movie', async () => {
 	const id = 89;

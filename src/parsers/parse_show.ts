@@ -1,4 +1,4 @@
-import type { ShowResponse } from '../types/show.js';
+import type { ShowResponse } from '../types/index.js';
 import { ValidTrimmedShowSchema } from './validation.js';
 
 export const parseShow = (_data: ShowResponse) => {

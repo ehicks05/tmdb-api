@@ -1,4 +1,4 @@
-import type { PersonResponse } from '../types/person.js';
+import type { PersonResponse } from '../types/index.js';
 
 const isValidPerson = (person: PersonResponse) => person.profile_path;
 

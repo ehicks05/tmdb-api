@@ -1,9 +1,13 @@
 import { z } from 'zod';
 import { MIN_VOTES } from '../constants.js';
-import { CastCreditSchema, CrewCreditSchema } from '../types/credits.js';
-import { GenreSchema } from '../types/genre.js';
-import { MovieResponseSchema } from '../types/movie.js';
-import { ContentRatingsSchema, ShowResponseSchema } from '../types/show.js';
+import {
+	CastCreditSchema,
+	ContentRatingsSchema,
+	CrewCreditSchema,
+	GenreSchema,
+	MovieResponseSchema,
+	ShowResponseSchema,
+} from '../types/index.js';
 
 const TrimmedCastCreditSchema = CastCreditSchema.pick({
 	id: true,
