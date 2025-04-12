@@ -1,5 +1,5 @@
 {
-	"name": "tmdb-api",
+	"name": "@ehicks05/tmdb-api",
 	"version": "0.1.0",
 	"description": "",
 	"type": "module",
