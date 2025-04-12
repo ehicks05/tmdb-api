@@ -6,8 +6,8 @@ import {
 } from './client/client.js';
 import { type Resource, getRecentlyChangedIds } from './endpoints/changes.js';
 import { discoverMediaIds } from './endpoints/discover.js';
+import { getGenres } from './endpoints/genres.js';
 import {
-	getGenres,
 	getLanguages,
 	getMovie,
 	getPerson,
