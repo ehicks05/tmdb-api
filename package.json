@@ -2,6 +2,9 @@
 	"name": "@ehicks05/tmdb-api",
 	"version": "0.1.0",
 	"description": "",
+	"repository": {
+		"url": "https://github.com/ehicks05/tmdb-api"
+	},
 	"type": "module",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
