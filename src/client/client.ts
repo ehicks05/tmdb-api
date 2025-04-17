@@ -28,7 +28,7 @@ const getClient = ({
 	return client;
 };
 
-export { getClient };
+export { client, getClient };
 
 export type ThrottledClient = ThrottledFunction<
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
