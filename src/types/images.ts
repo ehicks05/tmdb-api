@@ -12,11 +12,9 @@ export const ImageSchema = z.object({
 export type Image = z.infer<typeof ImageSchema>;
 
 export const MediaImagesSchema = z.object({
-	images: z.object({
-		backdrops: z.array(ImageSchema),
-		logos: z.array(ImageSchema),
-		posters: z.array(ImageSchema),
-	}),
+	backdrops: z.array(ImageSchema),
+	logos: z.array(ImageSchema),
+	posters: z.array(ImageSchema),
 });
 export type MediaImages = z.infer<typeof MediaImagesSchema>;
 

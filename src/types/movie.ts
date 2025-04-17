@@ -13,6 +13,18 @@ export const CollectionSchema = z.object({
 });
 export type Collection = z.infer<typeof CollectionSchema>;
 
+export const ReleasesSchema = z.object({
+	countries: z.array(
+		z.object({
+			certification: z.string(),
+			iso_3166_1: z.string(),
+			primary: z.boolean(),
+			release_date: z.string(),
+		}),
+	),
+});
+export type Releases = z.infer<typeof ReleasesSchema>;
+
 export const MovieSchema = MediaSchema.extend({
 	belongs_to_collection: CollectionSchema.nullable(),
 	budget: z.number(),
@@ -27,23 +39,13 @@ export const MovieSchema = MediaSchema.extend({
 });
 export type Movie = z.infer<typeof MovieSchema>;
 
-export const ReleasesSchema = z.object({
-	countries: z.array(
-		z.object({
-			certification: z.string(),
-			iso_3166_1: z.string(),
-			primary: z.boolean(),
-			release_date: z.string(),
-		}),
-	),
-});
-export type Releases = z.infer<typeof ReleasesSchema>;
-
 const ReleasesMergeSchema = z.object({
 	releases: ReleasesSchema,
 });
 
-export const MovieResponseSchema = MovieSchema.merge(AppendedProvidersSchema)
-	.merge(CreditsMergeSchema)
-	.merge(ReleasesMergeSchema);
+export const MovieResponseSchema = MovieSchema.extend(
+	z.object({ 'watch/providers': AppendedProvidersSchema }),
+)
+	.extend(CreditsMergeSchema)
+	.extend(ReleasesMergeSchema);
 export type MovieResponse = z.infer<typeof MovieResponseSchema>;

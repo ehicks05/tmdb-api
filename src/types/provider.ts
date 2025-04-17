@@ -15,17 +15,15 @@ export const AppendedProviderSchema = ProviderSchema.omit({
 export type AppendedProvider = z.infer<typeof AppendedProviderSchema>;
 
 export const AppendedProvidersSchema = z.object({
-	'watch/providers': z.object({
-		results: z.record(
-			z.string(),
-			z.object({
-				link: z.string().optional(),
-				flatrate: z.array(AppendedProviderSchema).optional(),
-				buy: z.array(AppendedProviderSchema).optional(),
-				rent: z.array(AppendedProviderSchema).optional(),
-			}),
-		),
-	}),
+	results: z.record(
+		z.string(),
+		z.object({
+			link: z.string().optional(),
+			flatrate: z.array(AppendedProviderSchema).optional(),
+			buy: z.array(AppendedProviderSchema).optional(),
+			rent: z.array(AppendedProviderSchema).optional(),
+		}),
+	),
 });
 export type AppendedProviders = z.infer<typeof AppendedProvidersSchema>;
 
