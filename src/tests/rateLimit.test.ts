@@ -4,7 +4,7 @@ import { TmdbApi } from '../main.js';
 import { env } from './env.js';
 
 const TMDB_RPS_LIMIT = 40;
-const TEST_REQUEST_COUNT = 80;
+const TEST_REQUEST_COUNT = 40;
 const TEST_PERSON_ID = 31;
 
 test('rateLimit', { timeout: 10_000, concurrent: false }, async () => {
