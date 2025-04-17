@@ -7,6 +7,7 @@ import {
 import { type Resource, getRecentlyChangedIds } from './endpoints/changes.js';
 import { discoverMediaIds } from './endpoints/discover.js';
 import { getGenres } from './endpoints/genres.js';
+import { getMovie as getMovie2 } from './endpoints/movie.js';
 import {
 	getLanguages,
 	getMovie,
@@ -64,4 +65,12 @@ export class TmdbApi {
 			return discoverMediaIds(this.client, media, isFullMode);
 		},
 	);
+}
+
+export class TmdbApi2 {
+	constructor(params: ThrottledClientParams) {
+		getClient(params);
+	}
+
+	getMovie = getMovie2;
 }
