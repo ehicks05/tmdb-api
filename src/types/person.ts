@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { PersonImagesSchema } from './images.js';
 
-export const GenderEnum = z.nativeEnum({
+export const GenderEnum = z.enum({
 	UNSPECIFIED: 0,
 	FEMAIL: 1,
 	MALE: 2,

@@ -40,7 +40,7 @@ const ValidMediaSchema = z.object({
 	vote_count: z.number().gte(MIN_VOTES),
 });
 
-export const ValidMovieSchema = MovieResponseSchema.merge(ValidMediaSchema).extend({
+export const ValidMovieSchema = MovieResponseSchema.extend(ValidMediaSchema).extend({
 	credits: TrimmedCreditsSchema.refine(
 		(credits) => {
 			const directorNameLength =
@@ -57,7 +57,7 @@ export const ValidMovieSchema = MovieResponseSchema.merge(ValidMediaSchema).exte
 	runtime: z.number().positive({ message: 'runtime is 0' }),
 });
 
-export const ValidShowSchema = ShowResponseSchema.merge(ValidMediaSchema).extend({
+export const ValidShowSchema = ShowResponseSchema.extend(ValidMediaSchema).extend({
 	content_ratings: ContentRatingsSchema.shape.content_ratings.refine(
 		(ratings) => {
 			const result = ratings?.results.find((r) => r.iso_3166_1 === 'US' && r.rating);
@@ -79,9 +79,9 @@ const TrimmedWatchProvidersSchema = z.object({
 	}),
 });
 
-export const ValidTrimmedMovieSchema = ValidMovieSchema.merge(
+export const ValidTrimmedMovieSchema = ValidMovieSchema.extend(
 	TrimmedWatchProvidersSchema,
 );
-export const ValidTrimmedShowSchema = ValidShowSchema.merge(
+export const ValidTrimmedShowSchema = ValidShowSchema.extend(
 	TrimmedWatchProvidersSchema,
 );

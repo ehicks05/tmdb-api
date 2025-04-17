@@ -52,7 +52,9 @@ export const ContentRatingsSchema = z.object({
 });
 export type ContentRatings = z.infer<typeof ContentRatingsSchema>;
 
-export const ShowResponseSchema = ShowSchema.merge(AppendedProvidersSchema)
-	.merge(CreditsMergeSchema)
-	.merge(ContentRatingsSchema);
+export const ShowResponseSchema = ShowSchema.extend(
+	z.object({ 'watch/providers': AppendedProvidersSchema }),
+)
+	.extend(CreditsMergeSchema)
+	.extend(ContentRatingsSchema);
 export type ShowResponse = z.infer<typeof ShowResponseSchema>;

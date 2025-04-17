@@ -42,5 +42,5 @@ export const SeasonSummarySchema = SeasonSchema.omit({
 }).extend({ episode_count: z.number() });
 export type SeasonSummary = z.infer<typeof SeasonSummarySchema>;
 
-export const SeasonResponseSchema = SeasonSchema.merge(CreditsMergeSchema);
+export const SeasonResponseSchema = SeasonSchema.extend(CreditsMergeSchema);
 export type SeasonResponse = z.infer<typeof SeasonResponseSchema>;
