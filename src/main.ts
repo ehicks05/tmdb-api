@@ -1,6 +1,6 @@
 import type { Interval } from 'date-fns';
 import {
-	type ThrottledAxiosClient,
+	type ThrottledClient,
 	type ThrottledClientParams,
 	getClient,
 } from './client/client.js';
@@ -18,7 +18,7 @@ import {
 import { asyncWrapper } from './endpoints/utils.js';
 
 export class TmdbApi {
-	private client: ThrottledAxiosClient | null = null;
+	private client: ThrottledClient | null = null;
 
 	constructor(params: ThrottledClientParams) {
 		if (!this.client) this.client = getClient(params);

@@ -1,5 +1,5 @@
 import type { ZodError } from 'zod';
-import type { ThrottledAxiosClient } from '../client/client.js';
+import type { ThrottledClient } from '../client/client.js';
 import { LanguageResponseSchema } from '../types/language.js';
 import { MovieResponseSchema } from '../types/movie.js';
 import { PersonResponseSchema } from '../types/person.js';
@@ -7,14 +7,14 @@ import { ProviderResponseSchema } from '../types/provider.js';
 import { SeasonResponseSchema } from '../types/season.js';
 import { ShowResponseSchema } from '../types/show.js';
 
-export const getMovie = async (client: ThrottledAxiosClient, id: number) => {
+export const getMovie = async (client: ThrottledClient, id: number) => {
 	const append = ['releases', 'credits', 'watch/providers'];
 	const config = { params: { append_to_response: append.join(',') } };
 	const { data } = await client(`/movie/${id}`, config);
 	return MovieResponseSchema.parse(data);
 };
 
-export const getShow = async (client: ThrottledAxiosClient, id: number) => {
+export const getShow = async (client: ThrottledClient, id: number) => {
 	const append = ['credits', 'watch/providers', 'content_ratings'];
 	const config = { params: { append_to_response: append.join(',') } };
 	const { data } = await client(`/tv/${id}`, config);
@@ -22,7 +22,7 @@ export const getShow = async (client: ThrottledAxiosClient, id: number) => {
 };
 
 export const getSeason = async (
-	client: ThrottledAxiosClient,
+	client: ThrottledClient,
 	showId: number,
 	season: number,
 ) => {
@@ -40,7 +40,7 @@ export const getSeason = async (
 	}
 };
 
-export const getPerson = async (client: ThrottledAxiosClient, id: number) => {
+export const getPerson = async (client: ThrottledClient, id: number) => {
 	const append = [''];
 	const config = {
 		params: { append_to_response: append.join(',') },
@@ -63,12 +63,12 @@ export const getPerson = async (client: ThrottledAxiosClient, id: number) => {
 	}
 };
 
-export const getLanguages = async (client: ThrottledAxiosClient) => {
+export const getLanguages = async (client: ThrottledClient) => {
 	const { data } = await client('/configuration/languages');
 	return LanguageResponseSchema.parse(data);
 };
 
-export const getProviders = async (client: ThrottledAxiosClient) => {
+export const getProviders = async (client: ThrottledClient) => {
 	const config = { params: { watch_region: 'US' } };
 	const { data } = await client('/watch/providers/movie', config);
 	return ProviderResponseSchema.parse(data).results;

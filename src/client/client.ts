@@ -14,19 +14,23 @@ export interface ThrottledClientParams {
 	interval?: number;
 }
 
+let client: ThrottledClient;
+
 const getClient = ({
 	api_key,
 	limit = DEFAULT_LIMIT,
 	interval = DEFAULT_INTERVAL,
 }: ThrottledClientParams) => {
-	const client = axios.create({ baseURL: BASE_URL, params: { api_key } });
+	if (client) return client;
+	const _client = axios.create({ baseURL: BASE_URL, params: { api_key } });
 	const throttle = pThrottle({ limit, interval });
-	return throttle(client.get);
+	client = throttle(_client.get);
+	return client;
 };
 
 export { getClient };
 
-export type ThrottledAxiosClient = ThrottledFunction<
+export type ThrottledClient = ThrottledFunction<
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	<T = any, R = AxiosResponse<T, any>, D = any>(
 		url: string,

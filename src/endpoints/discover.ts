@@ -6,7 +6,7 @@ import {
 	lastDayOfYear,
 	subMonths,
 } from 'date-fns';
-import type { ThrottledAxiosClient } from '../client/client.js';
+import type { ThrottledClient } from '../client/client.js';
 
 export const MIN_VOTES = '64';
 
@@ -16,7 +16,7 @@ const RECENCY_CLAUSE_KEY = {
 };
 
 const getIdsForInterval = async (
-	client: ThrottledAxiosClient,
+	client: ThrottledClient,
 	media: 'movie' | 'tv',
 	interval: Interval,
 ) => {
@@ -52,7 +52,7 @@ const FULL_INTERVALS = eachYearOfInterval({
  * If not, grab one interval covering the last 3 months
  */
 export const discoverMediaIds = async (
-	client: ThrottledAxiosClient,
+	client: ThrottledClient,
 	media: 'movie' | 'tv',
 	isFullMode = false,
 ) => {

@@ -1,13 +1,13 @@
 import { type Interval, format, subDays } from 'date-fns';
 import { intersection, range } from 'lodash-es';
-import type { ThrottledAxiosClient } from '../client/client.js';
+import type { ThrottledClient } from '../client/client.js';
 import type { RecentChangesResponse } from '../types/changes.js';
 import { discoverMediaIds } from './discover.js';
 
 export type Resource = 'movie' | 'tv' | 'person';
 
 export const getRecentlyChangedIds = async (
-	client: ThrottledAxiosClient,
+	client: ThrottledClient,
 	resource: Resource,
 	interval: Interval = { start: subDays(new Date(), 1), end: new Date() },
 ) => {

@@ -1,12 +1,12 @@
-import type { ThrottledAxiosClient } from '../client/client.js';
+import type { ThrottledClient } from '../client/client.js';
 import { type GenreResponse, GenreResponseSchema } from '../types/genre.js';
 
-const getMovieGenres = async (client: ThrottledAxiosClient) => {
+const getMovieGenres = async (client: ThrottledClient) => {
 	const { data } = await client('/genre/movie/list');
 	return GenreResponseSchema.parse(data).genres;
 };
 
-const getShowGenres = async (client: ThrottledAxiosClient) => {
+const getShowGenres = async (client: ThrottledClient) => {
 	const { data } = await client('/genre/tv/list');
 	return GenreResponseSchema.parse(data).genres;
 };
@@ -15,7 +15,7 @@ type GenreWithType = GenreResponse['genres'][number] & {
 	type: 'MOVIE' | 'SHOW' | 'BOTH';
 };
 
-export const getGenres = async (client: ThrottledAxiosClient) => {
+export const getGenres = async (client: ThrottledClient) => {
 	const [_movieGenres, _showGenres] = await Promise.all([
 		getMovieGenres(client),
 		getShowGenres(client),
