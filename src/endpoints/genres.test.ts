@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { tmdb } from './client.js';
+import { tmdb } from '../tests/client.js';
 
 test('genres', async () => {
 	const genres = await tmdb.getGenres();

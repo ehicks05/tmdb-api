@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { tmdb } from './client.js';
+import { tmdb } from '../tests/client.js';
 
 test('changes', { timeout: 10_000, concurrent: false }, async () => {
 	const ids = await tmdb.getRecentlyChangedIds('person', {

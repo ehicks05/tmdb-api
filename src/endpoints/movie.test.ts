@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { tmdb2 as tmdb } from './client.js';
+import { tmdb2 as tmdb } from '../tests/client.js';
 
 const id = 603;
 
