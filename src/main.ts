@@ -8,6 +8,7 @@ import { type Resource, getRecentlyChangedIds } from './endpoints/changes.js';
 import { discoverMediaIds } from './endpoints/discover.js';
 import { getGenres } from './endpoints/genres.js';
 import { getMovie as getMovie2 } from './endpoints/movie.js';
+import { getShow as getShow2 } from './endpoints/show.js';
 import {
 	getLanguages,
 	getMovie,
@@ -73,4 +74,5 @@ export class TmdbApi2 {
 	}
 
 	getMovie = getMovie2;
+	getShow = getShow2;
 }

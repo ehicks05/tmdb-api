@@ -52,13 +52,13 @@ export const ValidMovieSchema = MovieResponseSchema.extend(ValidMediaSchema).ext
 	imdb_id: z
 		.string({ message: 'poster_path is empty' })
 		.nonempty({ message: 'imdb_id is empty' }),
-	release_date: z.string().date(),
+	release_date: z.iso.date(),
 	// releases: ReleasesSchema.extend.releases.nonempty(),
 	runtime: z.number().positive({ message: 'runtime is 0' }),
 });
 
 export const ValidShowSchema = ShowResponseSchema.extend(ValidMediaSchema).extend({
-	content_ratings: ContentRatingsSchema.shape.content_ratings.refine(
+	content_ratings: ContentRatingsSchema.refine(
 		(ratings) => {
 			const result = ratings?.results.find((r) => r.iso_3166_1 === 'US' && r.rating);
 			return result !== undefined;

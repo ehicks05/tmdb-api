@@ -18,15 +18,13 @@ export const ShowTypeEnum = z.enum([
 export type ShowTypeEnum = z.infer<typeof ShowTypeEnum>;
 
 export const ContentRatingsSchema = z.object({
-	content_ratings: z.object({
-		results: z.array(
-			z.object({
-				descriptors: z.array(z.unknown()),
-				iso_3166_1: z.string(),
-				rating: z.string(),
-			}),
-		),
-	}),
+	results: z.array(
+		z.object({
+			descriptors: z.array(z.unknown()),
+			iso_3166_1: z.string(),
+			rating: z.string(),
+		}),
+	),
 });
 export type ContentRatings = z.infer<typeof ContentRatingsSchema>;
 
@@ -55,5 +53,5 @@ export const ShowResponseSchema = ShowSchema.extend(
 	z.object({ 'watch/providers': AppendedProvidersSchema }),
 )
 	.extend(CreditsMergeSchema)
-	.extend(ContentRatingsSchema);
+	.extend(z.object({ content_ratings: ContentRatingsSchema }));
 export type ShowResponse = z.infer<typeof ShowResponseSchema>;
