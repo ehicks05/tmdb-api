@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { CreditsMergeSchema } from './credits.js';
-import { MediaImagesSchema } from './images.js';
 import { MediaSchema, MovieStatusEnum } from './mediabase.js';
 import { AppendedProvidersSchema } from './provider.js';
 

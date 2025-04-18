@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { PersonImagesSchema } from './images.js';
 
 export const GenderEnum = z.enum({
 	UNSPECIFIED: 0,

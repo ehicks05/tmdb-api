@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { NetworkSchema } from './company.js';
 import { CreditsMergeSchema } from './credits.js';
-import { MediaImagesSchema } from './images.js';
 import { MediaSchema, ShowStatusEnum } from './mediabase.js';
 import { CreatorSchema } from './person.js';
 import { AppendedProvidersSchema } from './provider.js';
@@ -17,6 +16,19 @@ export const ShowTypeEnum = z.enum([
 	'Video',
 ]);
 export type ShowTypeEnum = z.infer<typeof ShowTypeEnum>;
+
+export const ContentRatingsSchema = z.object({
+	content_ratings: z.object({
+		results: z.array(
+			z.object({
+				descriptors: z.array(z.unknown()),
+				iso_3166_1: z.string(),
+				rating: z.string(),
+			}),
+		),
+	}),
+});
+export type ContentRatings = z.infer<typeof ContentRatingsSchema>;
 
 export const ShowSchema = MediaSchema.extend({
 	created_by: z.array(CreatorSchema),
@@ -38,19 +50,6 @@ export const ShowSchema = MediaSchema.extend({
 	type: ShowTypeEnum,
 });
 export type Show = z.infer<typeof ShowSchema>;
-
-export const ContentRatingsSchema = z.object({
-	content_ratings: z.object({
-		results: z.array(
-			z.object({
-				descriptors: z.array(z.unknown()),
-				iso_3166_1: z.string(),
-				rating: z.string(),
-			}),
-		),
-	}),
-});
-export type ContentRatings = z.infer<typeof ContentRatingsSchema>;
 
 export const ShowResponseSchema = ShowSchema.extend(
 	z.object({ 'watch/providers': AppendedProvidersSchema }),
