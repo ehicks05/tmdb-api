@@ -18,6 +18,11 @@ export const MediaImagesSchema = z.object({
 });
 export type MediaImages = z.infer<typeof MediaImagesSchema>;
 
+export const SeasonImagesSchema = z.object({
+	posters: z.array(ImageSchema),
+});
+export type SeasonImages = z.infer<typeof SeasonImagesSchema>;
+
 export const PersonImagesSchema = z.object({
 	images: z.object({
 		profiles: z.array(ImageSchema),
