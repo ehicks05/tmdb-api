@@ -1,12 +1,12 @@
-import type { ThrottledClient } from '../client/client.js';
+import { client } from '../client/client.js';
 import { type GenreResponse, GenreResponseSchema } from '../types/genre.js';
 
-const getMovieGenres = async (client: ThrottledClient) => {
+const getMovieGenres = async () => {
 	const { data } = await client('/genre/movie/list');
 	return GenreResponseSchema.parse(data).genres;
 };
 
-const getShowGenres = async (client: ThrottledClient) => {
+const getShowGenres = async () => {
 	const { data } = await client('/genre/tv/list');
 	return GenreResponseSchema.parse(data).genres;
 };
@@ -15,10 +15,10 @@ type GenreWithType = GenreResponse['genres'][number] & {
 	type: 'MOVIE' | 'SHOW' | 'BOTH';
 };
 
-export const getGenres = async (client: ThrottledClient) => {
+export const getGenres = async () => {
 	const [_movieGenres, _showGenres] = await Promise.all([
-		getMovieGenres(client),
-		getShowGenres(client),
+		getMovieGenres(),
+		getShowGenres(),
 	]);
 
 	// if a genre exists in both lists, update its type to 'BOTH'

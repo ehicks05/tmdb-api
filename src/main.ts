@@ -6,12 +6,13 @@ import {
 } from './client/client.js';
 import { type Resource, getRecentlyChangedIds } from './endpoints/changes.js';
 import { discoverMediaIds } from './endpoints/discover.js';
-import { getGenres } from './endpoints/genres.js';
+import { getGenres as getGenres2 } from './endpoints/genres.js';
 import { getMovie as getMovie2 } from './endpoints/movie.js';
 import { getPerson as getPerson2 } from './endpoints/person.js';
 import { getSeason as getSeason2 } from './endpoints/season.js';
 import { getShow as getShow2 } from './endpoints/show.js';
 import {
+	getGenres,
 	getLanguages,
 	getMovie,
 	getPerson,
@@ -75,6 +76,7 @@ export class TmdbApi2 {
 		getClient(params);
 	}
 
+	getGenres = getGenres2;
 	getMovie = getMovie2;
 	getPerson = getPerson2;
 	getSeason = getSeason2;

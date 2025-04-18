@@ -42,8 +42,6 @@ const getSchema = (appends?: Appends) =>
 export async function getPerson<T extends Appends>({ id, appends }: Params<T>) {
 	const { data } = await client(`/person/${id}`, toParams(appends));
 
-	console.log(data);
-
 	const parsed = getSchema(appends).parse(data) as PersonResult<T>;
 
 	return parsed;
