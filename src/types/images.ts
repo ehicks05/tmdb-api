@@ -24,8 +24,6 @@ export const SeasonImagesSchema = z.object({
 export type SeasonImages = z.infer<typeof SeasonImagesSchema>;
 
 export const PersonImagesSchema = z.object({
-	images: z.object({
-		profiles: z.array(ImageSchema),
-	}),
+	profiles: z.array(ImageSchema),
 });
 export type PersonImages = z.infer<typeof PersonImagesSchema>;
