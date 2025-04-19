@@ -33,7 +33,7 @@ const getResultsForInterval = async (path: string) => {
 	return resultPages.flat();
 };
 
-interface Params {
+export interface Params {
 	media: 'movie' | 'tv';
 	start?: Date;
 	end?: Date;
