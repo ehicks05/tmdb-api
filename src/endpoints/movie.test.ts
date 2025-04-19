@@ -1,10 +1,10 @@
 import { expect, test } from 'vitest';
-import { tmdb2 as tmdb } from '../tests/client.js';
+import { tmdb } from '../tests/client.js';
 
 const id = 603;
 
 test('get movie', async () => {
-	const movie = await tmdb.getMovie({ id });
+	const movie = await tmdb.movie({ id });
 
 	expect(movie).not.toBeNull();
 	expect(movie).not.toHaveProperty('credits');
@@ -14,7 +14,7 @@ test('get movie', async () => {
 });
 
 test('get movie with appends', async () => {
-	const movie = await tmdb.getMovie({
+	const movie = await tmdb.movie({
 		id,
 		appends: {
 			credits: true,

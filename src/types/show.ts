@@ -1,9 +1,7 @@
 import { z } from 'zod';
 import { NetworkSchema } from './company.js';
-import { CreditsMergeSchema } from './credits.js';
-import { MediaSchema, ShowStatusEnum } from './mediabase.js';
+import { DiscoverMedia, MediaSchema, ShowStatusEnum } from './mediabase.js';
 import { CreatorSchema } from './person.js';
-import { AppendedProvidersSchema } from './provider.js';
 import { EpisodeSchema, SeasonSummarySchema } from './season.js';
 
 export const ShowTypeEnum = z.enum([
@@ -49,9 +47,11 @@ export const ShowSchema = MediaSchema.extend({
 });
 export type Show = z.infer<typeof ShowSchema>;
 
-export const ShowResponseSchema = ShowSchema.extend(
-	z.object({ 'watch/providers': AppendedProvidersSchema }),
-)
-	.extend(CreditsMergeSchema)
-	.extend(z.object({ content_ratings: ContentRatingsSchema }));
-export type ShowResponse = z.infer<typeof ShowResponseSchema>;
+export const DiscoverShowSchema = DiscoverMedia.extend(
+	ShowSchema.pick({
+		first_air_date: true,
+		name: true,
+		origin_country: true,
+		original_name: true,
+	}),
+);

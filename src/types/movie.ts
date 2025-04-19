@@ -1,7 +1,5 @@
 import { z } from 'zod';
-import { CreditsMergeSchema } from './credits.js';
-import { MediaSchema, MovieStatusEnum } from './mediabase.js';
-import { AppendedProvidersSchema } from './provider.js';
+import { DiscoverMedia, MediaSchema, MovieStatusEnum } from './mediabase.js';
 
 export const CollectionSchema = z.object({
 	id: z.number(),
@@ -38,13 +36,11 @@ export const MovieSchema = MediaSchema.extend({
 });
 export type Movie = z.infer<typeof MovieSchema>;
 
-const ReleasesMergeSchema = z.object({
-	releases: ReleasesSchema,
-});
-
-export const MovieResponseSchema = MovieSchema.extend(
-	z.object({ 'watch/providers': AppendedProvidersSchema }),
-)
-	.extend(CreditsMergeSchema)
-	.extend(ReleasesMergeSchema);
-export type MovieResponse = z.infer<typeof MovieResponseSchema>;
+export const DiscoverMovieSchema = DiscoverMedia.extend(
+	MovieSchema.pick({
+		original_title: true,
+		release_date: true,
+		title: true,
+		video: true,
+	}),
+);

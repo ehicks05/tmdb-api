@@ -16,8 +16,8 @@ test('rateLimit', { timeout: 10_000, concurrent: false }, async () => {
 	const start = Date.now();
 
 	await Promise.all([
-		await pMap(zeroArray, () => client1.getPerson(TEST_PERSON_ID)),
-		await pMap(zeroArray, () => client2.getPerson(TEST_PERSON_ID)),
+		await pMap(zeroArray, () => client1.person({ id: TEST_PERSON_ID })),
+		await pMap(zeroArray, () => client2.person({ id: TEST_PERSON_ID })),
 	]);
 	const end = Date.now();
 

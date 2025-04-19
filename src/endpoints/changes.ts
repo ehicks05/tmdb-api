@@ -1,13 +1,12 @@
 import { type Interval, format, subDays } from 'date-fns';
 import { intersection, range } from 'lodash-es';
-import type { ThrottledClient } from '../client/client.js';
+import { client } from '../client/client.js';
 import type { RecentChangesResponse } from '../types/changes.js';
-import { discoverMediaIds } from './discover.js';
+import { discover } from './discover.js';
 
 export type Resource = 'movie' | 'tv' | 'person';
 
-export const getRecentlyChangedIds = async (
-	client: ThrottledClient,
+export const changes = async (
 	resource: Resource,
 	interval: Interval = { start: subDays(new Date(), 1), end: new Date() },
 ) => {
@@ -36,7 +35,8 @@ export const getRecentlyChangedIds = async (
 	// filter using /discover
 	if (resource === 'person') return ids;
 
-	const discoverIds = await discoverMediaIds(client, resource, true);
+	const discoverResults = await discover({ media: resource });
+	const discoverIds = discoverResults.map((o) => o.id);
 
 	return intersection(ids, discoverIds);
 };

@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
-import { tmdb2 as tmdb } from '../tests/client.js';
+import { tmdb } from '../tests/client.js';
 
 test('genres', async () => {
-	const genres = await tmdb.getGenres();
+	const genres = await tmdb.genres();
 
 	const comedy = genres?.find((o) => o.id === 35);
 	const adventure = genres?.find((o) => o.id === 12);

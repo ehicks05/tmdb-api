@@ -1,11 +1,11 @@
 import { expect, test } from 'vitest';
-import { tmdb2 as tmdb } from '../tests/client.js';
+import { tmdb } from '../tests/client.js';
 
 const showId = 1396;
 const seasonNumber = 1;
 
 test('get show', async () => {
-	const season = await tmdb.getSeason({ showId, seasonNumber });
+	const season = await tmdb.season({ showId, seasonNumber });
 
 	expect(season).not.toBeNull();
 	expect(season).not.toHaveProperty('credits');
@@ -14,7 +14,7 @@ test('get show', async () => {
 });
 
 test('get show with appends', async () => {
-	const season = await tmdb.getSeason({
+	const season = await tmdb.season({
 		showId,
 		seasonNumber,
 		appends: {

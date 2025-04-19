@@ -1,9 +1,5 @@
 import { z } from 'zod';
-import {
-	CastCreditSchema,
-	CreditsMergeSchema,
-	CrewCreditSchema,
-} from './credits.js';
+import { CastCreditSchema, CreditsSchema, CrewCreditSchema } from './credits.js';
 
 export const EpisodeSchema = z.object({
 	air_date: z.string(),
@@ -42,5 +38,5 @@ export const SeasonSummarySchema = SeasonSchema.omit({
 }).extend({ episode_count: z.number() });
 export type SeasonSummary = z.infer<typeof SeasonSummarySchema>;
 
-export const SeasonResponseSchema = SeasonSchema.extend(CreditsMergeSchema);
+export const SeasonResponseSchema = SeasonSchema.extend({ credits: CreditsSchema });
 export type SeasonResponse = z.infer<typeof SeasonResponseSchema>;

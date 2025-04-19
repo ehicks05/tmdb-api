@@ -1,10 +1,10 @@
 import { expect, test } from 'vitest';
-import { tmdb2 as tmdb } from '../tests/client.js';
+import { tmdb } from '../tests/client.js';
 
 const id = 1396;
 
 test('get show', async () => {
-	const show = await tmdb.getShow({ id });
+	const show = await tmdb.show({ id });
 
 	expect(show).not.toBeNull();
 	expect(show).not.toHaveProperty('content_ratings');
@@ -14,7 +14,7 @@ test('get show', async () => {
 });
 
 test('get show with appends', async () => {
-	const show = await tmdb.getShow({
+	const show = await tmdb.show({
 		id,
 		appends: {
 			content_ratings: true,

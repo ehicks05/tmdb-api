@@ -1,75 +1,69 @@
-import {
-	type Interval,
-	addMonths,
-	eachYearOfInterval,
-	format,
-	lastDayOfYear,
-	subMonths,
-} from 'date-fns';
-import type { ThrottledClient } from '../client/client.js';
+import { type Interval, eachYearOfInterval, format, lastDayOfYear } from 'date-fns';
+import { range } from 'lodash-es';
+import z from 'zod';
+import { client } from '../client/client.js';
+import { DiscoverMovieSchema } from '../types/movie.js';
+import { DiscoverShowSchema } from '../types/show.js';
 
-export const MIN_VOTES = '64';
-
-const RECENCY_CLAUSE_KEY = {
+const TIME_FIELD = {
 	movie: 'primary_release_date',
 	tv: 'first_air_date',
 };
 
-const getIdsForInterval = async (
-	client: ThrottledClient,
-	media: 'movie' | 'tv',
-	interval: Interval,
-) => {
-	const params = new URLSearchParams({
-		'vote_count.gte': MIN_VOTES,
-		[`${RECENCY_CLAUSE_KEY[media]}.gte`]: format(interval.start, 'yyyy-MM-dd'),
-		[`${RECENCY_CLAUSE_KEY[media]}.lte`]: format(interval.end, 'yyyy-MM-dd'),
-	});
-
-	const path = `/discover/${media}?${params.toString()}`;
-	const { data } = await client(path);
-
-	const ids: number[] = data.results.map((o: { id: number }) => o.id);
-	const pages = data.total_pages;
-
-	let page = 1;
-	while (page < pages) {
-		page += 1;
-		const { data } = await client(`${path}&page=${page}`);
-		ids.push(data.results.map((o: { id: number }) => o.id));
-	}
-
-	return ids.flat();
-};
-
-const FULL_INTERVALS = eachYearOfInterval({
-	start: new Date('1874-01-01'),
-	end: addMonths(new Date(), 1),
+const DiscoverResponseSchema = z.object({
+	page: z.number(),
+	results: z.array(z.union([DiscoverMovieSchema, DiscoverShowSchema])),
+	total_pages: z.number(),
+	total_results: z.number(),
 });
 
-/**
- * If `isFullMode`, grab all yearly intervals back to the oldest movie (from 1874)
- * If not, grab one interval covering the last 3 months
- */
-export const discoverMediaIds = async (
-	client: ThrottledClient,
-	media: 'movie' | 'tv',
-	isFullMode = false,
-) => {
-	const fullIntervals = FULL_INTERVALS.map((date) => ({
-		start: date,
-		end: lastDayOfYear(date),
-	}));
+const getResultsForInterval = async (path: string) => {
+	const { data } = await client(path);
 
-	const partialIntervals = [{ start: subMonths(new Date(), 3), end: new Date() }];
+	const resultPages = await Promise.all(
+		range(0, data.total_pages).map(async (i) => {
+			const { data } = await client(`${path}&page=${i + 1}`);
+			console.log(data);
 
-	const intervals = isFullMode ? fullIntervals : partialIntervals;
-
-	const idsByYear = await Promise.all(
-		intervals.map((interval: Interval) =>
-			getIdsForInterval(client, media, interval),
-		),
+			const discoveryResponse = DiscoverResponseSchema.parse(data);
+			return discoveryResponse.results;
+		}),
 	);
 
-	return idsByYear.flat();
+	return resultPages.flat();
+};
+
+interface Params {
+	media: 'movie' | 'tv';
+	start?: Date;
+	end?: Date;
+	minVotes?: number;
+}
+
+export const discover = async ({
+	media,
+	start = new Date(1874, 0, 1),
+	end = new Date(),
+	minVotes = 0,
+}: Params) => {
+	// Multi-year ranges are split to avoid the 500 page api limit.
+	const intervals = eachYearOfInterval({ start, end }).map((startOfYear) => ({
+		start: startOfYear,
+		end: lastDayOfYear(startOfYear),
+	}));
+	intervals[0].start = start;
+	intervals[intervals.length - 1].end = end;
+
+	const resultsByYear = await Promise.all(
+		intervals.map((interval: Interval) => {
+			const params = new URLSearchParams({
+				'vote_count.gte': String(minVotes),
+				[`${TIME_FIELD[media]}.gte`]: format(interval.start, 'yyyy-MM-dd'),
+				[`${TIME_FIELD[media]}.lte`]: format(interval.end, 'yyyy-MM-dd'),
+			});
+			return getResultsForInterval(`/discover/${media}?${params.toString()}`);
+		}),
+	);
+
+	return resultsByYear.flat();
 };

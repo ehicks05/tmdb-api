@@ -1,9 +1,6 @@
 import { z } from 'zod';
-import { MovieResponseSchema } from './movie.js';
-import { ShowResponseSchema } from './show.js';
+import { MovieSchema } from './movie.js';
+import { ShowSchema } from './show.js';
 
-export const MediaResponseSchema = z.union([
-	MovieResponseSchema,
-	ShowResponseSchema,
-]);
+export const MediaResponseSchema = z.union([MovieSchema, ShowSchema]);
 export type MediaResponse = z.infer<typeof MediaResponseSchema>;

@@ -6,6 +6,7 @@ export * from './images.js';
 export * from './language.js';
 export * from './media.js';
 export * from './mediabase.js';
+export * from './mediaCredits.js';
 export * from './movie.js';
 export * from './person.js';
 export * from './provider.js';
