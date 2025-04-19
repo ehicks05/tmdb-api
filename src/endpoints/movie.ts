@@ -13,7 +13,7 @@ import {
 	type Releases,
 	ReleasesSchema,
 } from '../types/movie.js';
-import { toParams } from './utils.js';
+import { asyncWrapper, toParams } from './utils.js';
 
 export type MovieAppends = {
 	credits?: boolean;
@@ -30,7 +30,7 @@ type MovieResult<T extends MovieAppends> = Movie &
 		? { 'watch/providers': AppendedProviders }
 		: {});
 
-interface Params<T extends MovieAppends> {
+export interface Params<T extends MovieAppends> {
 	id: number;
 	appends?: T;
 }
@@ -45,10 +45,12 @@ const getSchema = (appends?: MovieAppends) =>
 			: z.null().optional(),
 	});
 
-export async function getMovie<T extends MovieAppends>({ id, appends }: Params<T>) {
+async function _getMovie<T extends MovieAppends>({ id, appends }: Params<T>) {
 	const { data } = await client(`/movie/${id}`, toParams(appends));
 
 	const parsed = getSchema(appends).parse(data) as MovieResult<T>;
 
 	return parsed;
 }
+
+export const getMovie = asyncWrapper(_getMovie);
