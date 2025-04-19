@@ -1,12 +1,16 @@
 import { expect, test } from 'vitest';
-import { ValidMovieSchema, ValidShowSchema } from '../parsers/validation.js';
-import { PersonResponseSchema, SeasonResponseSchema } from '../types/index.js';
 import { tmdb } from '../tests/client.js';
+import {
+	MovieSchema,
+	PersonResponseSchema,
+	SeasonResponseSchema,
+	ShowSchema,
+} from '../types/index.js';
 
 test('get movie', async () => {
 	const id = 89;
 	const res = await tmdb.getMovie(id);
-	const { data, error } = ValidMovieSchema.safeParse(res);
+	const { data, error } = MovieSchema.safeParse(res);
 	expect(res).not.toBeNull();
 	expect(data).not.toBeNull();
 });
@@ -14,7 +18,7 @@ test('get movie', async () => {
 test('get show', async () => {
 	const id = 456;
 	const res = await tmdb.getShow(id);
-	const { data, error } = ValidShowSchema.safeParse(res);
+	const { data, error } = ShowSchema.safeParse(res);
 	expect(res).not.toBeNull();
 	expect(data).not.toBeNull();
 });
