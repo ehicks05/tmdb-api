@@ -13,14 +13,14 @@ import {
 } from '../types/index.js';
 import { toParams } from './utils.js';
 
-type Appends = {
+export type ShowAppends = {
 	content_ratings?: boolean;
 	credits?: boolean;
 	images?: boolean;
 	'watch/providers'?: boolean;
 };
 
-type ShowResult<T extends Appends> = Show &
+type ShowResult<T extends ShowAppends> = Show &
 	(T extends { content_ratings: true } ? { content_ratings: ContentRatings } : {}) &
 	(T extends { credits: true } ? { credits: Credits } : {}) &
 	(T extends { images: true } ? { images: MediaImages } : {}) &
@@ -28,12 +28,12 @@ type ShowResult<T extends Appends> = Show &
 		? { 'watch/providers': AppendedProviders }
 		: {});
 
-interface Params<T extends Appends> {
+interface Params<T extends ShowAppends> {
 	id: number;
 	appends?: T;
 }
 
-const getSchema = (appends?: Appends) =>
+const getSchema = (appends?: ShowAppends) =>
 	ShowSchema.extend({
 		content_ratings: appends?.content_ratings
 			? ContentRatingsSchema.required()
@@ -45,7 +45,7 @@ const getSchema = (appends?: Appends) =>
 			: z.null().optional(),
 	});
 
-export async function getShow<T extends Appends>({ id, appends }: Params<T>) {
+export async function getShow<T extends ShowAppends>({ id, appends }: Params<T>) {
 	const { data } = await client(`/tv/${id}`, toParams(appends));
 
 	const parsed = getSchema(appends).parse(data) as ShowResult<T>;

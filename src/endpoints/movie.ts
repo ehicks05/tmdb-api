@@ -15,14 +15,14 @@ import {
 } from '../types/movie.js';
 import { toParams } from './utils.js';
 
-type Appends = {
+export type MovieAppends = {
 	credits?: boolean;
 	images?: boolean;
 	releases?: boolean;
 	'watch/providers'?: boolean;
 };
 
-type MovieResult<T extends Appends> = Movie &
+type MovieResult<T extends MovieAppends> = Movie &
 	(T extends { credits: true } ? { credits: Credits } : {}) &
 	(T extends { images: true } ? { images: MediaImages } : {}) &
 	(T extends { releases: true } ? { releases: Releases } : {}) &
@@ -30,12 +30,12 @@ type MovieResult<T extends Appends> = Movie &
 		? { 'watch/providers': AppendedProviders }
 		: {});
 
-interface Params<T extends Appends> {
+interface Params<T extends MovieAppends> {
 	id: number;
 	appends?: T;
 }
 
-const getSchema = (appends?: Appends) =>
+const getSchema = (appends?: MovieAppends) =>
 	MovieSchema.extend({
 		credits: appends?.credits ? CreditsSchema.required() : z.null().optional(),
 		images: appends?.images ? MediaImagesSchema.required() : z.null().optional(),
@@ -45,7 +45,7 @@ const getSchema = (appends?: Appends) =>
 			: z.null().optional(),
 	});
 
-export async function getMovie<T extends Appends>({ id, appends }: Params<T>) {
+export async function getMovie<T extends MovieAppends>({ id, appends }: Params<T>) {
 	const { data } = await client(`/movie/${id}`, toParams(appends));
 
 	const parsed = getSchema(appends).parse(data) as MovieResult<T>;

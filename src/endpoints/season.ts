@@ -11,26 +11,26 @@ import {
 } from '../types/index.js';
 import { toParams } from './utils.js';
 
-type Appends = {
+export type SeasonAppends = {
 	credits?: boolean;
 	images?: boolean;
 	'watch/providers'?: boolean;
 };
 
-type SeasonResult<T extends Appends> = Season &
+type SeasonResult<T extends SeasonAppends> = Season &
 	(T extends { credits: true } ? { credits: Credits } : {}) &
 	(T extends { images: true } ? { images: SeasonImages } : {}) &
 	(T extends { 'watch/providers': true }
 		? { 'watch/providers': AppendedProviders }
 		: {});
 
-interface Params<T extends Appends> {
+interface Params<T extends SeasonAppends> {
 	showId: number;
 	seasonNumber: number;
 	appends?: T;
 }
 
-const getSchema = (appends?: Appends) =>
+const getSchema = (appends?: SeasonAppends) =>
 	SeasonSchema.extend({
 		credits: appends?.credits ? CreditsSchema.required() : z.null().optional(),
 		images: appends?.images ? SeasonImagesSchema.required() : z.null().optional(),
@@ -39,7 +39,7 @@ const getSchema = (appends?: Appends) =>
 			: z.null().optional(),
 	});
 
-export async function getSeason<T extends Appends>({
+export async function getSeason<T extends SeasonAppends>({
 	showId,
 	seasonNumber,
 	appends,

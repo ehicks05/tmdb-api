@@ -12,23 +12,23 @@ import {
 } from '../types/index.js';
 import { toParams } from './utils.js';
 
-type Appends = {
+export type PersonAppends = {
 	movie_credits?: boolean;
 	tv_credits?: boolean;
 	images?: boolean;
 };
 
-type PersonResult<T extends Appends> = Person &
+type PersonResult<T extends PersonAppends> = Person &
 	(T extends { movie_credits: true } ? { movie_credits: MovieCredits } : {}) &
 	(T extends { tv_credits: true } ? { tv_credits: TvCredits } : {}) &
 	(T extends { images: true } ? { images: PersonImages } : {});
 
-interface Params<T extends Appends> {
+interface Params<T extends PersonAppends> {
 	id: number;
 	appends?: T;
 }
 
-const getSchema = (appends?: Appends) =>
+const getSchema = (appends?: PersonAppends) =>
 	PersonSchema.extend({
 		movie_credits: appends?.movie_credits
 			? MovieCreditsSchema.required()
@@ -39,7 +39,10 @@ const getSchema = (appends?: Appends) =>
 		images: appends?.images ? PersonImagesSchema.required() : z.null().optional(),
 	});
 
-export async function getPerson<T extends Appends>({ id, appends }: Params<T>) {
+export async function getPerson<T extends PersonAppends>({
+	id,
+	appends,
+}: Params<T>) {
 	const { data } = await client(`/person/${id}`, toParams(appends));
 
 	const parsed = getSchema(appends).parse(data) as PersonResult<T>;
