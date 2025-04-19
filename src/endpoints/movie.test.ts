@@ -6,7 +6,7 @@ const id = 603;
 test('get movie', async () => {
 	const movie = await tmdb.movie({ id });
 
-	expect(movie).not.toBeNull();
+	expect(movie).toBeDefined();
 	expect(movie).not.toHaveProperty('credits');
 	expect(movie).not.toHaveProperty('images');
 	expect(movie).not.toHaveProperty('releases');
@@ -24,7 +24,7 @@ test('get movie with appends', async () => {
 		},
 	});
 
-	expect(movie).not.toBeNull();
+	expect(movie).toBeDefined();
 	expect(movie).toHaveProperty('credits');
 	expect(movie).toHaveProperty('images');
 	expect(movie).toHaveProperty('releases');

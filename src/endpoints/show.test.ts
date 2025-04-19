@@ -6,7 +6,7 @@ const id = 1396;
 test('get show', async () => {
 	const show = await tmdb.show({ id });
 
-	expect(show).not.toBeNull();
+	expect(show).toBeDefined();
 	expect(show).not.toHaveProperty('content_ratings');
 	expect(show).not.toHaveProperty('credits');
 	expect(show).not.toHaveProperty('images');
@@ -24,7 +24,7 @@ test('get show with appends', async () => {
 		},
 	});
 
-	expect(show).not.toBeNull();
+	expect(show).toBeDefined();
 	expect(show).toHaveProperty('content_ratings');
 	expect(show).toHaveProperty('credits');
 	expect(show).toHaveProperty('images');
