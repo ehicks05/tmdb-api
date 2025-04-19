@@ -33,7 +33,7 @@ An api key from [TMDB](https://www.themoviedb.org).
    import { tmdb } from './tmdb'
 
    async function printTitle() {
-      const movie = await tmdb.getMovie(603);
+      const movie = await tmdb.movie({ id: 603 });
       console.log(movie.title); // The Matrix
    }
 
