@@ -23,8 +23,6 @@ const getResultsForInterval = async (path: string) => {
 	const resultPages = await Promise.all(
 		range(0, data.total_pages).map(async (i) => {
 			const { data } = await client(`${path}&page=${i + 1}`);
-			console.log(data);
-
 			const discoveryResponse = DiscoverResponseSchema.parse(data);
 			return discoveryResponse.results;
 		}),

@@ -33,11 +33,14 @@ export const asyncWrapper = <T extends (...args: any[]) => Promise<any>>(fn: T) 
 	};
 };
 
-export const toParams = (appends?: Record<string, boolean>) => ({
-	params: {
-		append_to_response: Object.entries(appends || {})
-			.filter(([, v]) => v)
-			.map(([k]) => k)
-			.join(','),
-	},
-});
+export const toParams = (appends?: Record<string, boolean>) =>
+	appends && Object.keys(appends).length > 0
+		? {
+				params: {
+					append_to_response: Object.entries(appends || {})
+						.filter(([, v]) => v)
+						.map(([k]) => k)
+						.join(','),
+				},
+			}
+		: undefined;
