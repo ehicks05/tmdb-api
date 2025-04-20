@@ -1,10 +1,6 @@
 import { z } from 'zod';
 import { PersonSchema } from './person.js';
 
-// fields specific to cast/crew credits
-const CastSchema = z.object({ character: z.string(), order: z.number() });
-const CrewSchema = z.object({ department: z.string(), job: z.string() });
-
 // fields common to both cast and crew credits
 const CreditBaseSchema = PersonSchema.pick({
 	adult: true,
@@ -19,10 +15,16 @@ const CreditBaseSchema = PersonSchema.pick({
 	original_name: z.string(),
 });
 
-export const CastCreditSchema = CreditBaseSchema.extend(CastSchema);
+export const CastCreditSchema = CreditBaseSchema.extend({
+	character: z.string(),
+	order: z.number(),
+});
 export type CastCredit = z.infer<typeof CastCreditSchema>;
 
-export const CrewCreditSchema = CreditBaseSchema.extend(CrewSchema);
+export const CrewCreditSchema = CreditBaseSchema.extend({
+	department: z.string(),
+	job: z.string(),
+});
 export type CrewCredit = z.infer<typeof CrewCreditSchema>;
 
 export const CreditsSchema = z.object({
