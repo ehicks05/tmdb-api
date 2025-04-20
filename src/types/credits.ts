@@ -25,9 +25,6 @@ export type CastCredit = z.infer<typeof CastCreditSchema>;
 export const CrewCreditSchema = CreditBaseSchema.extend(CrewSchema);
 export type CrewCredit = z.infer<typeof CrewCreditSchema>;
 
-export const CreditSchema = z.union([CastCreditSchema, CrewCreditSchema]);
-export type Credit = z.infer<typeof CreditSchema>;
-
 export const CreditsSchema = z.object({
 	cast: z.array(CastCreditSchema),
 	crew: z.array(CrewCreditSchema),

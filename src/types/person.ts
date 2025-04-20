@@ -33,6 +33,3 @@ export const CreatorSchema = PersonSchema.pick({
 	profile_path: true,
 });
 export type Creator = z.infer<typeof CreatorSchema>;
-
-export const PersonResponseSchema = PersonSchema;
-export type PersonResponse = z.infer<typeof PersonResponseSchema>;
