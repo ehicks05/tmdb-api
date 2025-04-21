@@ -18,7 +18,7 @@ export const PersonSchema = z.object({
 	homepage: z.string().nullable(),
 	id: z.number(),
 	imdb_id: z.string().nullable(),
-	known_for_department: z.string({ message: 'missing known_for_department' }),
+	known_for_department: z.string().nullable(),
 	name: z.string(),
 	place_of_birth: z.string().nullable(),
 	popularity: z.number(),
