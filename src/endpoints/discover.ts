@@ -34,11 +34,16 @@ const getResultsForInterval = async (path: string) => {
 	return resultPages.flat();
 };
 
+type Field = 'popularity';
+type Direction = 'asc' | 'desc';
+type SortBy = `${Field}.${Direction}`;
+
 export interface Params {
 	media: 'movie' | 'tv';
 	start?: Date;
 	end?: Date;
 	minVotes?: number;
+	sortBy?: SortBy;
 }
 
 export const discover = async ({
@@ -46,6 +51,7 @@ export const discover = async ({
 	start = new Date(1874, 0, 1),
 	end = new Date(),
 	minVotes = 0,
+	sortBy = 'popularity.desc',
 }: Params) => {
 	// Multi-year ranges are split to avoid the 500 page api limit.
 	const intervals = eachYearOfInterval({ start, end }).map((startOfYear) => ({
@@ -59,6 +65,7 @@ export const discover = async ({
 		intervals.map((interval: Interval) => {
 			const params = new URLSearchParams({
 				'vote_count.gte': String(minVotes),
+				sort_by: sortBy,
 				[`${TIME_FIELD[media]}.gte`]: format(interval.start, 'yyyy-MM-dd'),
 				[`${TIME_FIELD[media]}.lte`]: format(interval.end, 'yyyy-MM-dd'),
 			});
