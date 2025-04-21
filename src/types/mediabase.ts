@@ -51,15 +51,3 @@ export const MediaSchema = z.object({
 	vote_count: z.number(),
 });
 export type Media = z.infer<typeof MediaSchema>;
-
-export const DiscoverMedia = MediaSchema.omit({
-	genres: true,
-	homepage: true,
-	production_companies: true,
-	production_countries: true,
-	spoken_languages: true,
-	status: true,
-	tagline: true,
-}).extend({
-	genre_ids: z.number().array(),
-});

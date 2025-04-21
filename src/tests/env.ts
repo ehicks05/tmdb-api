@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-const TMDB_API_KEY = process.env.TMDB_API_KEY;
+const { TMDB_API_KEY } = process.env;
 
 if (!TMDB_API_KEY) {
 	throw new Error('missing api key');

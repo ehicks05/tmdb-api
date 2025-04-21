@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DiscoverMedia, MediaSchema, MovieStatusEnum } from './mediabase.js';
+import { MediaSchema, MovieStatusEnum } from './mediabase.js';
 
 export const CollectionSchema = z.object({
 	id: z.number(),
@@ -35,12 +35,3 @@ export const MovieSchema = MediaSchema.extend({
 	video: z.boolean(),
 });
 export type Movie = z.infer<typeof MovieSchema>;
-
-export const DiscoverMovieSchema = DiscoverMedia.extend(
-	MovieSchema.pick({
-		original_title: true,
-		release_date: true,
-		title: true,
-		video: true,
-	}),
-);

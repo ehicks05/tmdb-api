@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { NetworkSchema } from './company.js';
-import { DiscoverMedia, MediaSchema, ShowStatusEnum } from './mediabase.js';
+import { MediaSchema, ShowStatusEnum } from './mediabase.js';
 import { CreatorSchema } from './person.js';
 import { EpisodeSchema, SeasonSummarySchema } from './season.js';
 
@@ -46,12 +46,3 @@ export const ShowSchema = MediaSchema.extend({
 	type: ShowTypeEnum,
 });
 export type Show = z.infer<typeof ShowSchema>;
-
-export const DiscoverShowSchema = DiscoverMedia.extend(
-	ShowSchema.pick({
-		first_air_date: true,
-		name: true,
-		origin_country: true,
-		original_name: true,
-	}),
-);

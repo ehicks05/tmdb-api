@@ -1,14 +1,12 @@
 import { z } from 'zod';
+import { PageSchema } from './page.js';
 
-export const RecentChangesResponseSchema = z.object({
+export const RecentChangesResponseSchema = PageSchema.extend({
 	results: z.array(
 		z.object({
 			id: z.number(),
 			adult: z.boolean(),
 		}),
 	),
-	page: z.number(),
-	total_pages: z.number(),
-	total_results: z.number(),
 });
 export type RecentChangesResponse = z.infer<typeof RecentChangesResponseSchema>;

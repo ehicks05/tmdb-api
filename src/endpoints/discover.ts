@@ -1,22 +1,13 @@
 import { type Interval, eachYearOfInterval, format, lastDayOfYear } from 'date-fns';
 import { range } from 'lodash-es';
-import z from 'zod';
 import { client } from '../client/client.js';
 import { TMDB_PAGE_LIMIT } from '../constants.js';
-import { DiscoverMovieSchema } from '../types/movie.js';
-import { DiscoverShowSchema } from '../types/show.js';
+import { DiscoverResponseSchema } from '../types/discover.js';
 
 const TIME_FIELD = {
 	movie: 'primary_release_date',
 	tv: 'first_air_date',
 };
-
-const DiscoverResponseSchema = z.object({
-	page: z.number(),
-	results: z.array(z.union([DiscoverMovieSchema, DiscoverShowSchema])),
-	total_pages: z.number(),
-	total_results: z.number(),
-});
 
 const getResultsForInterval = async (path: string) => {
 	const { data } = await client(path);

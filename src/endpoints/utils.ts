@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios';
 
-const logAxiosError = (error: AxiosError) => {
+export const logAxiosError = (error: AxiosError) => {
 	const { baseURL, url, params } = error.config || {};
 	const config = { baseURL, url, params };
 
