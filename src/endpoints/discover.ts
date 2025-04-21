@@ -2,6 +2,7 @@ import { type Interval, eachYearOfInterval, format, lastDayOfYear } from 'date-f
 import { range } from 'lodash-es';
 import z from 'zod';
 import { client } from '../client/client.js';
+import { TMDB_PAGE_LIMIT } from '../constants.js';
 import { DiscoverMovieSchema } from '../types/movie.js';
 import { DiscoverShowSchema } from '../types/show.js';
 
@@ -20,8 +21,10 @@ const DiscoverResponseSchema = z.object({
 const getResultsForInterval = async (path: string) => {
 	const { data } = await client(path);
 
+	const lastPage = Math.min(data.total_pages, TMDB_PAGE_LIMIT);
+
 	const resultPages = await Promise.all(
-		range(0, data.total_pages).map(async (i) => {
+		range(0, lastPage).map(async (i) => {
 			const { data } = await client(`${path}&page=${i + 1}`);
 			const discoveryResponse = DiscoverResponseSchema.parse(data);
 			return discoveryResponse.results;
