@@ -6,3 +6,8 @@ const RPS = (LIMIT / INTERVAL_MS) * 1000;
  * `RPS` included for convenience.
  */
 export const TMDB_RATE_LIMIT = { LIMIT, INTERVAL_MS, RPS };
+
+/**
+ * Paginated endpoints fail when page > 500
+ */
+export const TMDB_PAGE_LIMIT = 500;
