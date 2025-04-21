@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PageSchema } from './page.js';
 
 export const GenderEnum = z.enum({
 	UNSPECIFIED: 0,
@@ -33,3 +34,18 @@ export const CreatorSchema = PersonSchema.pick({
 	profile_path: true,
 });
 export type Creator = z.infer<typeof CreatorSchema>;
+
+export const PopularPersonSchema = PersonSchema.pick({
+	adult: true,
+	gender: true,
+	id: true,
+	known_for_department: true,
+	name: true,
+	popularity: true,
+	profile_path: true,
+}).extend({ known_for: z.array(z.unknown()), original_name: z.string() });
+
+export const PopularPersonPageSchema = PageSchema.extend({
+	results: z.array(PopularPersonSchema),
+});
+export type PopularPersonPage = z.infer<typeof PopularPersonPageSchema>;

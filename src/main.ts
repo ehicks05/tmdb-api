@@ -5,6 +5,7 @@ import { getGenres } from './endpoints/genres.js';
 import { getLanguages } from './endpoints/languages.js';
 import { getMovie } from './endpoints/movie.js';
 import { getPerson } from './endpoints/person.js';
+import { popular } from './endpoints/popular.js';
 import { getProviders } from './endpoints/providers.js';
 import { getSeason } from './endpoints/season.js';
 import { getShow } from './endpoints/show.js';
@@ -20,6 +21,7 @@ export class TmdbApi {
 	languages = getLanguages;
 	movie = getMovie;
 	person = getPerson;
+	popular = popular;
 	providers = getProviders;
 	season = getSeason;
 	show = getShow;
