@@ -1,9 +1,11 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
 import pThrottle, { type ThrottledFunction } from 'p-throttle';
-import { TMDB_API_INTERVAL, TMDB_API_LIMIT } from '../constants.js';
+import { TMDB_RATE_LIMIT } from '../constants.js';
 import { configureHttp } from './configure-http.js';
 
 configureHttp();
+
+const { INTERVAL_MS, LIMIT } = TMDB_RATE_LIMIT;
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -17,8 +19,8 @@ let client: ThrottledClient;
 
 const getClient = ({
 	api_key,
-	limit = TMDB_API_LIMIT,
-	interval = TMDB_API_INTERVAL,
+	limit = LIMIT,
+	interval = INTERVAL_MS,
 }: ThrottledClientParams) => {
 	if (client) return client;
 	const _client = axios.create({ baseURL: BASE_URL, params: { api_key } });

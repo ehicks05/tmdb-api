@@ -1,6 +1,6 @@
 import pMap from 'p-map';
 import { expect, test } from 'vitest';
-import { TMDB_RPS_LIMIT } from '../constants.js';
+import { TMDB_RATE_LIMIT } from '../constants.js';
 import { TmdbApi } from '../main.js';
 import { env } from './env.js';
 
@@ -25,5 +25,5 @@ test('rateLimit', { timeout: 10_000, concurrent: false }, async () => {
 	const duration = end - start + 1000; // +1 second to start with a full bucket
 	const rps = (requests / duration) * 1000;
 
-	expect(rps).toBeLessThanOrEqual(TMDB_RPS_LIMIT);
+	expect(rps).toBeLessThanOrEqual(TMDB_RATE_LIMIT.RPS);
 });
