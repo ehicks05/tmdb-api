@@ -17,13 +17,9 @@ export interface PopularParams {
 export const popular = async ({ resource, pages = 1 }: PopularParams) => {
 	const url = `/${resource}/popular`;
 
-	const {
-		data: { total_pages },
-	} = await client<PopularPersonPage>(url, {
-		params: {},
-	});
+	const { data } = await client<PopularPersonPage>(url);
 
-	const lastPage = Math.min(total_pages, pages, TMDB_PAGE_LIMIT);
+	const lastPage = Math.min(data.total_pages, pages, TMDB_PAGE_LIMIT);
 
 	const pageResults = await Promise.all(
 		range(0, lastPage).map(async (i) => {
