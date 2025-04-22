@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const ProviderSchema = z.object({
-	display_priorities: z.record(z.string(), z.number()),
-	display_priority: z.number(),
+	display_priorities: z.record(z.string(), z.number()), // country code to priority
+	display_priority: z.number(), // global?
 	logo_path: z.string(),
 	provider_name: z.string(),
 	provider_id: z.number(),
