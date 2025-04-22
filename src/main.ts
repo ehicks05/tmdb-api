@@ -1,4 +1,5 @@
 import { type ThrottledClientParams, getClient } from './client/client.js';
+import { certifications } from './endpoints/certifications.js';
 import { changes } from './endpoints/changes.js';
 import { discover } from './endpoints/discover.js';
 import { getGenres } from './endpoints/genres.js';
@@ -15,6 +16,7 @@ export class TmdbApi {
 		getClient(params);
 	}
 
+	certifications = certifications;
 	changes = changes;
 	discover = discover;
 	genres = getGenres;
