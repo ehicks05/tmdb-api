@@ -22,8 +22,7 @@ export const changes = async (
 	const lastPage = Math.min(data.total_pages, TMDB_PAGE_LIMIT);
 
 	const pageResults = await Promise.all(
-		range(0, lastPage).map(async (i) => {
-			const page = i + 1;
+		range(1, lastPage + 1).map(async (page) => {
 			const { data } = await client<RecentChangesResponse>(url, {
 				params: { start_date, end_date, page },
 			});
@@ -33,11 +32,14 @@ export const changes = async (
 
 	const ids = pageResults.flat();
 
-	// filter using /discover
 	if (resource === 'person') return ids;
 
-	const discoverResults = await discover({ media: resource });
-	const discoverIds = discoverResults.map((o) => o.id);
+	// filter using /discover
 
-	return intersection(ids, discoverIds);
+	// const discoverResults = await discover({ media: resource });
+	// const discoverIds = discoverResults.map((o) => o.id);
+
+	// return intersection(ids, discoverIds);
+
+	return ids;
 };

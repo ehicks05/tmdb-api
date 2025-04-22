@@ -1,22 +1,19 @@
+import querystring from 'node:querystring';
 import { type Interval, eachYearOfInterval, format, lastDayOfYear } from 'date-fns';
 import { range } from 'lodash-es';
 import { client } from '../client/client.js';
 import { TMDB_PAGE_LIMIT } from '../constants.js';
 import { DiscoverResponseSchema } from '../types/discover.js';
+import type { DiscoverQuery } from '../types/discoverQuery.js';
 
-const TIME_FIELD = {
-	movie: 'primary_release_date',
-	tv: 'first_air_date',
-};
-
-const getResultsForInterval = async (path: string) => {
-	const { data } = await client(path);
+const fetchAllPages = async (url: string) => {
+	const { data } = await client(url);
 
 	const lastPage = Math.min(data.total_pages, TMDB_PAGE_LIMIT);
 
 	const resultPages = await Promise.all(
-		range(0, lastPage).map(async (i) => {
-			const { data } = await client(`${path}&page=${i + 1}`);
+		range(1, lastPage + 1).map(async (page) => {
+			const { data } = await client(`${url}&page=${page}`);
 			const discoveryResponse = DiscoverResponseSchema.parse(data);
 			return discoveryResponse.results;
 		}),
@@ -25,26 +22,7 @@ const getResultsForInterval = async (path: string) => {
 	return resultPages.flat();
 };
 
-type Field = 'popularity';
-type Direction = 'asc' | 'desc';
-type SortBy = `${Field}.${Direction}`;
-
-export interface Params {
-	media: 'movie' | 'tv';
-	start?: Date;
-	end?: Date;
-	minVotes?: number;
-	sortBy?: SortBy;
-}
-
-export const discover = async ({
-	media,
-	start = new Date(1874, 0, 1),
-	end = new Date(),
-	minVotes = 0,
-	sortBy = 'popularity.desc',
-}: Params) => {
-	// Multi-year ranges are split to avoid the 500 page api limit.
+const buildAnnualIntervals = (start: Date, end: Date) => {
 	const intervals = eachYearOfInterval({ start, end }).map((startOfYear) => ({
 		start: startOfYear,
 		end: lastDayOfYear(startOfYear),
@@ -52,17 +30,66 @@ export const discover = async ({
 	intervals[0].start = start;
 	intervals[intervals.length - 1].end = end;
 
-	const resultsByYear = await Promise.all(
-		intervals.map((interval: Interval) => {
-			const params = new URLSearchParams({
-				'vote_count.gte': String(minVotes),
-				sort_by: sortBy,
-				[`${TIME_FIELD[media]}.gte`]: format(interval.start, 'yyyy-MM-dd'),
-				[`${TIME_FIELD[media]}.lte`]: format(interval.end, 'yyyy-MM-dd'),
-			});
-			return getResultsForInterval(`/discover/${media}?${params.toString()}`);
-		}),
-	);
+	return intervals;
+};
 
-	return resultsByYear.flat();
+interface Params {
+	media: 'movie' | 'tv';
+	query?: DiscoverQuery;
+	exhaustive?: boolean;
+}
+
+/**
+ * @param exhaustive - if true, will automatically fetch all pages and return
+ * an array of all the results.
+ */
+export const discover = async ({
+	media,
+	query = {},
+	exhaustive = false,
+}: Params) => {
+	if (exhaustive) {
+		// 1. extract time field from params
+		const start =
+			'primary_release_date.gte' in query && query['primary_release_date.gte']
+				? query['primary_release_date.gte']
+				: query && 'first_air_date.gte' in query && query['first_air_date.gte']
+					? query['first_air_date.gte']
+					: new Date(1874, 0, 1).toISOString();
+		const end =
+			'primary_release_date.lte' in query && query['primary_release_date.lte']
+				? query['primary_release_date.lte']
+				: query && 'first_air_date.lte' in query && query['first_air_date.lte']
+					? query['first_air_date.lte']
+					: new Date().toISOString();
+
+		// 2. remove page and time field
+		const timeFieldGte =
+			media === 'movie' ? 'primary_release_date.gte' : 'first_air_date.gte';
+		const timeFieldLte =
+			media === 'movie' ? 'primary_release_date.gte' : 'first_air_date.lte';
+
+		const { page, ...query2 } = query;
+
+		// 3. split into yearly intervals to avoid the 500 page api limit
+		const intervals = buildAnnualIntervals(new Date(start), new Date(end));
+
+		const resultsByYear = await Promise.all(
+			intervals.map((interval: Interval) => {
+				const qs = querystring.stringify({
+					...query2,
+					[timeFieldGte]: format(interval.start, 'yyyy-MM-dd'),
+					[timeFieldLte]: format(interval.end, 'yyyy-MM-dd'),
+				});
+
+				return fetchAllPages(`/discover/${media}?${qs}`);
+			}),
+		);
+
+		return resultsByYear.flat();
+	}
+
+	// standard mode
+	const qs = querystring.stringify(query);
+	return fetchAllPages(`/discover/${media}?${qs}`);
 };

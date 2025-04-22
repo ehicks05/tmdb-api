@@ -29,8 +29,10 @@ const checkMovie = async (
 const findRecentUnpopularMovieIds = async () => {
 	const discoverMovies = await tmdb.discover({
 		media: 'movie',
-		sortBy: 'popularity.asc',
-		start: new Date(2025, 0, 1),
+		query: {
+			sort_by: 'popularity.asc',
+			'primary_release_date.gte': '2025-01-01)',
+		},
 	});
 	return discoverMovies.map((o) => o.id);
 };

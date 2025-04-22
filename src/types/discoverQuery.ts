@@ -1,17 +1,16 @@
 import z from 'zod';
 
-export const DiscoverSharedParamsSchema = z.object({
+const SortDirection = z.enum(['asc', 'desc']);
+
+export const DiscoverSharedQuerySchema = z.object({
 	include_adult: z.boolean().default(false),
 	language: z.string().default('en-US'),
-	page: z.int().max(500).default(1),
+	page: z.int().min(1).max(500).default(1),
 	sort_by: z
-		.enum([
-			'popularity.asc',
-			'popularity.desc',
-			'vote_average.asc',
-			'vote_average.desc',
-			'vote_count.asc',
-			'vote_count.desc',
+		.templateLiteral([
+			z.literal(['popularity', 'vote_average', 'vote_count']),
+			'.',
+			SortDirection,
 		])
 		.default('popularity.desc'),
 	'vote_average.gte': z.number(),
@@ -34,7 +33,7 @@ export const DiscoverSharedParamsSchema = z.object({
 	without_watch_providers: z.string(),
 });
 
-export const DiscoverMovieParamsSchema = DiscoverSharedParamsSchema.extend({
+export const DiscoverMovieQuerySchema = DiscoverSharedQuerySchema.extend({
 	certification: z.string(),
 	'certification.gte': z.string(),
 	'certification.lte': z.string(),
@@ -47,21 +46,18 @@ export const DiscoverMovieParamsSchema = DiscoverSharedParamsSchema.extend({
 	'release_date.gte': z.iso.date(),
 	'release_date.lte': z.iso.date(),
 	sort_by: z
-		.enum([
-			'original_title.asc',
-			'original_title.desc',
-			'popularity.asc',
-			'popularity.desc',
-			'primary_release_date.asc',
-			'primary_release_date.desc',
-			'revenue.asc',
-			'revenue.desc',
-			'title.asc',
-			'title.desc',
-			'vote_average.asc',
-			'vote_average.desc',
-			'vote_count.asc',
-			'vote_count.desc',
+		.templateLiteral([
+			z.literal([
+				'original_title',
+				'popularity',
+				'primary_release_date',
+				'revenue',
+				'title',
+				'vote_average',
+				'vote_count',
+			]),
+			'.',
+			SortDirection,
 		])
 		.default('popularity.desc'),
 	with_cast: z.string(),
@@ -69,10 +65,10 @@ export const DiscoverMovieParamsSchema = DiscoverSharedParamsSchema.extend({
 	with_people: z.string(),
 	with_release_type: z.string(),
 	year: z.int(),
-}).optional();
-export type DiscoverMovieParams = z.infer<typeof DiscoverMovieParamsSchema>;
+}).partial();
+export type DiscoverMovieQuery = z.infer<typeof DiscoverMovieQuerySchema>;
 
-export const DiscoverTvParamsSchema = DiscoverSharedParamsSchema.extend({
+export const DiscoverTvQuerySchema = DiscoverSharedQuerySchema.extend({
 	'air_date.gte': z.iso.date(),
 	'air_date.lte': z.iso.date(),
 	first_air_date_year: z.int(),
@@ -81,32 +77,28 @@ export const DiscoverTvParamsSchema = DiscoverSharedParamsSchema.extend({
 	include_null_first_air_dates: z.boolean().default(false),
 	screened_theatrically: z.boolean(),
 	sort_by: z
-		.enum([
-			'first_air_date.asc',
-			'first_air_date.desc',
-			'name.asc',
-			'name.desc',
-			'original_name.asc',
-			'original_name.desc',
-			'popularity.asc',
-			'popularity.desc',
-			'primary_release_date.asc',
-			'primary_release_date.desc',
-			'vote_average.asc',
-			'vote_average.desc',
-			'vote_count.asc',
-			'vote_count.desc',
+		.templateLiteral([
+			z.literal([
+				'first_air_date',
+				'name',
+				'original_name',
+				'popularity',
+				'vote_average',
+				'vote_count',
+			]),
+			'.',
+			SortDirection,
 		])
 		.default('popularity.desc'),
 	timezone: z.string(),
 	with_networks: z.int(),
 	with_status: z.string(),
 	with_type: z.string(),
-}).optional();
-export type DiscoverTvParams = z.infer<typeof DiscoverTvParamsSchema>;
+}).partial();
+export type DiscoverTvQuery = z.infer<typeof DiscoverTvQuerySchema>;
 
-export const DiscoverParamsSchema = z.union([
-	DiscoverMovieParamsSchema,
-	DiscoverTvParamsSchema,
+export const DiscoverQuerySchema = z.union([
+	DiscoverMovieQuerySchema,
+	DiscoverTvQuerySchema,
 ]);
-export type DiscoverParams = z.infer<typeof DiscoverParamsSchema>;
+export type DiscoverQuery = z.infer<typeof DiscoverQuerySchema>;
