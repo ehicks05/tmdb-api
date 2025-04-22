@@ -3,7 +3,7 @@ import { tmdb } from '../tests/client.js';
 
 const pages = 2;
 
-test('get providers', async () => {
+test('get popular people', async () => {
 	const popularPeople = await tmdb.popular({ resource: 'person', pages });
 	const p0 = popularPeople[0];
 	const p39 = popularPeople[39];
