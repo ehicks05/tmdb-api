@@ -22,8 +22,7 @@ export const popular = async ({ resource, pages = 1 }: PopularParams) => {
 	const lastPage = Math.min(data.total_pages, pages, TMDB_PAGE_LIMIT);
 
 	const pageResults = await Promise.all(
-		range(0, lastPage).map(async (i) => {
-			const page = i + 1;
+		range(1, lastPage + 1).map(async (page) => {
 			const { data } = await client<PopularPersonPage>(url, {
 				params: { page },
 			});
@@ -31,6 +30,5 @@ export const popular = async ({ resource, pages = 1 }: PopularParams) => {
 		}),
 	);
 
-	const results = pageResults.flat();
-	return results;
+	return pageResults.flat();
 };

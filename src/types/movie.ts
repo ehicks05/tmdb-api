@@ -1,6 +1,16 @@
 import { z } from 'zod';
 import { MediaSchema, MovieStatusEnum } from './mediabase.js';
 
+export const ReleaseTypeEnum = z.enum([
+	'Premiere',
+	'Theatrical (limited)',
+	'Theatrical',
+	'Digital',
+	'Physical',
+	'TV',
+]);
+export type ReleaseType = z.infer<typeof ReleaseTypeEnum>;
+
 export const CollectionSchema = z.object({
 	id: z.number(),
 	name: z.string(),
