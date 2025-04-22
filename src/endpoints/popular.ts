@@ -5,7 +5,7 @@ import type { PopularPersonPage } from '../types/person.js';
 
 export type Resource = 'person';
 
-interface Params {
+export interface PopularParams {
 	resource: Resource;
 	pages?: number;
 }
@@ -14,7 +14,7 @@ interface Params {
  * Popular movies and shows can be found using the discover endpoint.
  * There is no discover for people, so this exists.
  */
-export const popular = async ({ resource, pages = 1 }: Params) => {
+export const popular = async ({ resource, pages = 1 }: PopularParams) => {
 	const url = `/${resource}/popular`;
 
 	const {

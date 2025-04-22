@@ -33,7 +33,7 @@ const buildAnnualIntervals = (start: Date, end: Date) => {
 	return intervals;
 };
 
-interface Params {
+export interface DiscoverParams {
 	media: 'movie' | 'tv';
 	query?: DiscoverQuery;
 	exhaustive?: boolean;
@@ -47,7 +47,7 @@ export const discover = async ({
 	media,
 	query = {},
 	exhaustive = false,
-}: Params) => {
+}: DiscoverParams) => {
 	if (exhaustive) {
 		// 1. extract time field from params
 		const start =
