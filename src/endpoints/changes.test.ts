@@ -9,5 +9,6 @@ test('changes', { timeout: 10_000, concurrent: false }, async () => {
 
 	const oneChange = ids?.[0];
 
+	expect(ids).toBeDefined();
 	expect(oneChange).toBeTypeOf('number');
 });

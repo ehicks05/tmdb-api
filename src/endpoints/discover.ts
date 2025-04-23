@@ -5,21 +5,31 @@ import { client } from '../client/client.js';
 import { TMDB_PAGE_LIMIT } from '../constants.js';
 import { DiscoverResponseSchema } from '../types/discover.js';
 import type { DiscoverQuery } from '../types/discoverQuery.js';
+import { logError } from './utils.js';
 
 const fetchAllPages = async (url: string) => {
-	const { data } = await client(url);
+	try {
+		const { data } = await client(url);
 
-	const lastPage = Math.min(data.total_pages, TMDB_PAGE_LIMIT);
+		const lastPage = Math.min(data.total_pages, TMDB_PAGE_LIMIT);
 
-	const resultPages = await Promise.all(
-		range(1, lastPage + 1).map(async (page) => {
-			const { data } = await client(`${url}&page=${page}`);
-			const discoveryResponse = DiscoverResponseSchema.parse(data);
-			return discoveryResponse.results;
-		}),
-	);
+		const resultPages = await Promise.all(
+			range(1, lastPage + 1).map(async (page) => {
+				try {
+					const { data } = await client(`${url}&page=${page}`);
+					return DiscoverResponseSchema.parse(data).results;
+				} catch (error) {
+					logError(error);
+					return [];
+				}
+			}),
+		);
 
-	return resultPages.flat();
+		return resultPages.flat();
+	} catch (error) {
+		logError(error);
+		return [];
+	}
 };
 
 const buildAnnualIntervals = (start: Date, end: Date) => {
@@ -31,6 +41,50 @@ const buildAnnualIntervals = (start: Date, end: Date) => {
 	intervals[intervals.length - 1].end = end;
 
 	return intervals;
+};
+
+const handleExhaustive = async ({
+	media,
+	query = {},
+}: Omit<DiscoverParams, 'exhaustive'>) => {
+	// 1. extract time field from params
+	const start =
+		'primary_release_date.gte' in query && query['primary_release_date.gte']
+			? query['primary_release_date.gte']
+			: query && 'first_air_date.gte' in query && query['first_air_date.gte']
+				? query['first_air_date.gte']
+				: new Date(1874, 0, 1).toISOString();
+	const end =
+		'primary_release_date.lte' in query && query['primary_release_date.lte']
+			? query['primary_release_date.lte']
+			: query && 'first_air_date.lte' in query && query['first_air_date.lte']
+				? query['first_air_date.lte']
+				: new Date().toISOString();
+
+	// 2. remove page and time field
+	const timeFieldGte =
+		media === 'movie' ? 'primary_release_date.gte' : 'first_air_date.gte';
+	const timeFieldLte =
+		media === 'movie' ? 'primary_release_date.gte' : 'first_air_date.lte';
+
+	const { page, ...query2 } = query;
+
+	// 3. split into yearly intervals to avoid the 500 page api limit
+	const intervals = buildAnnualIntervals(new Date(start), new Date(end));
+
+	const resultsByYear = await Promise.all(
+		intervals.map((interval: Interval) => {
+			const qs = querystring.stringify({
+				...query2,
+				[timeFieldGte]: format(interval.start, 'yyyy-MM-dd'),
+				[timeFieldLte]: format(interval.end, 'yyyy-MM-dd'),
+			});
+
+			return fetchAllPages(`/discover/${media}?${qs}`);
+		}),
+	);
+
+	return resultsByYear.flat();
 };
 
 export interface DiscoverParams {
@@ -48,48 +102,15 @@ export const discover = async ({
 	query = {},
 	exhaustive = false,
 }: DiscoverParams) => {
-	if (exhaustive) {
-		// 1. extract time field from params
-		const start =
-			'primary_release_date.gte' in query && query['primary_release_date.gte']
-				? query['primary_release_date.gte']
-				: query && 'first_air_date.gte' in query && query['first_air_date.gte']
-					? query['first_air_date.gte']
-					: new Date(1874, 0, 1).toISOString();
-		const end =
-			'primary_release_date.lte' in query && query['primary_release_date.lte']
-				? query['primary_release_date.lte']
-				: query && 'first_air_date.lte' in query && query['first_air_date.lte']
-					? query['first_air_date.lte']
-					: new Date().toISOString();
+	try {
+		if (exhaustive) {
+			return handleExhaustive({ media, query });
+		}
 
-		// 2. remove page and time field
-		const timeFieldGte =
-			media === 'movie' ? 'primary_release_date.gte' : 'first_air_date.gte';
-		const timeFieldLte =
-			media === 'movie' ? 'primary_release_date.gte' : 'first_air_date.lte';
-
-		const { page, ...query2 } = query;
-
-		// 3. split into yearly intervals to avoid the 500 page api limit
-		const intervals = buildAnnualIntervals(new Date(start), new Date(end));
-
-		const resultsByYear = await Promise.all(
-			intervals.map((interval: Interval) => {
-				const qs = querystring.stringify({
-					...query2,
-					[timeFieldGte]: format(interval.start, 'yyyy-MM-dd'),
-					[timeFieldLte]: format(interval.end, 'yyyy-MM-dd'),
-				});
-
-				return fetchAllPages(`/discover/${media}?${qs}`);
-			}),
-		);
-
-		return resultsByYear.flat();
+		// non-exhaustive mode
+		const qs = querystring.stringify(query);
+		return fetchAllPages(`/discover/${media}?${qs}`);
+	} catch (error) {
+		logError(error);
 	}
-
-	// standard mode
-	const qs = querystring.stringify(query);
-	return fetchAllPages(`/discover/${media}?${qs}`);
 };

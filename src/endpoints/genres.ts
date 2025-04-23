@@ -1,26 +1,21 @@
 import { client } from '../client/client.js';
 import { type GenreResponse, GenreResponseSchema } from '../types/genre.js';
+import { logError } from './utils.js';
 
-const getMovieGenres = async () => {
+const movieGenres = async () => {
 	const { data } = await client('/genre/movie/list');
 	return GenreResponseSchema.parse(data).genres;
 };
 
-const getShowGenres = async () => {
+const showGenres = async () => {
 	const { data } = await client('/genre/tv/list');
 	return GenreResponseSchema.parse(data).genres;
 };
 
-type GenreWithType = GenreResponse['genres'][number] & {
-	type: 'MOVIE' | 'SHOW' | 'BOTH';
-};
+type Genre = GenreResponse['genres'][number];
+type GenreWithType = Genre & { type: 'MOVIE' | 'SHOW' | 'BOTH' };
 
-export const getGenres = async () => {
-	const [_movieGenres, _showGenres] = await Promise.all([
-		getMovieGenres(),
-		getShowGenres(),
-	]);
-
+const applyType = (_movieGenres: Genre[], _showGenres: Genre[]) => {
 	// if a genre exists in both lists, update its type to 'BOTH'
 	const movieGenres = _movieGenres.map((movieGenre) => {
 		const isBoth = _showGenres.some((showGenre) => showGenre.id === movieGenre.id);
@@ -34,4 +29,18 @@ export const getGenres = async () => {
 		.filter((showGenre) => !movieGenreIds.includes(showGenre.id));
 
 	return [...movieGenres, ...showGenres] as GenreWithType[];
+};
+
+export const genres = async () => {
+	try {
+		const [_movieGenres, _showGenres] = await Promise.all([
+			movieGenres(),
+			showGenres(),
+		]);
+
+		const genres = applyType(_movieGenres, _showGenres);
+		return genres;
+	} catch (error) {
+		logError(error);
+	}
 };

@@ -9,7 +9,7 @@ import {
 	SeasonImagesSchema,
 	SeasonSchema,
 } from '../types/index.js';
-import { toParams } from './utils.js';
+import { logError, toParams } from './utils.js';
 
 export type SeasonAppends = {
 	credits?: boolean;
@@ -39,17 +39,18 @@ const getSchema = (appends?: SeasonAppends) =>
 			: z.null().optional(),
 	});
 
-export async function getSeason<T extends SeasonAppends>({
+export async function season<T extends SeasonAppends>({
 	showId,
 	seasonNumber,
 	appends,
 }: Params<T>) {
-	const { data } = await client(
-		`/tv/${showId}/season/${seasonNumber}`,
-		toParams(appends),
-	);
-
-	const parsed = getSchema(appends).parse(data) as SeasonResult<T>;
-
-	return parsed;
+	try {
+		const { data } = await client(
+			`/tv/${showId}/season/${seasonNumber}`,
+			toParams(appends),
+		);
+		return getSchema(appends).parse(data) as SeasonResult<T>;
+	} catch (error) {
+		logError(error);
+	}
 }

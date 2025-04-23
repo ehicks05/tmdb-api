@@ -10,7 +10,7 @@ import {
 	type TvCredits,
 	TvCreditsSchema,
 } from '../types/index.js';
-import { toParams } from './utils.js';
+import { logError, toParams } from './utils.js';
 
 export type PersonAppends = {
 	movie_credits?: boolean;
@@ -39,13 +39,11 @@ const getSchema = (appends?: PersonAppends) =>
 		images: appends?.images ? PersonImagesSchema.required() : z.null().optional(),
 	});
 
-export async function getPerson<T extends PersonAppends>({
-	id,
-	appends,
-}: Params<T>) {
-	const { data } = await client(`/person/${id}`, toParams(appends));
-
-	const parsed = getSchema(appends).parse(data) as PersonResult<T>;
-
-	return parsed;
+export async function person<T extends PersonAppends>({ id, appends }: Params<T>) {
+	try {
+		const { data } = await client(`/person/${id}`, toParams(appends));
+		return getSchema(appends).parse(data) as PersonResult<T>;
+	} catch (error) {
+		logError(error);
+	}
 }

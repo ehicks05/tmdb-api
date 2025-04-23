@@ -11,7 +11,7 @@ import {
 	type Show,
 	ShowSchema,
 } from '../types/index.js';
-import { toParams } from './utils.js';
+import { logError, toParams } from './utils.js';
 
 export type ShowAppends = {
 	content_ratings?: boolean;
@@ -45,10 +45,11 @@ const getSchema = (appends?: ShowAppends) =>
 			: z.null().optional(),
 	});
 
-export async function getShow<T extends ShowAppends>({ id, appends }: Params<T>) {
-	const { data } = await client(`/tv/${id}`, toParams(appends));
-
-	const parsed = getSchema(appends).parse(data) as ShowResult<T>;
-
-	return parsed;
+export async function show<T extends ShowAppends>({ id, appends }: Params<T>) {
+	try {
+		const { data } = await client(`/tv/${id}`, toParams(appends));
+		return getSchema(appends).parse(data) as ShowResult<T>;
+	} catch (error) {
+		logError(error);
+	}
 }

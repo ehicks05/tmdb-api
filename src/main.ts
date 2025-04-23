@@ -3,14 +3,14 @@ import { certifications } from './endpoints/certifications.js';
 import { changes } from './endpoints/changes.js';
 import { company } from './endpoints/company.js';
 import { discover } from './endpoints/discover.js';
-import { getGenres } from './endpoints/genres.js';
-import { getLanguages } from './endpoints/languages.js';
-import { getMovie } from './endpoints/movie.js';
-import { getPerson } from './endpoints/person.js';
+import { genres } from './endpoints/genres.js';
+import { languages } from './endpoints/languages.js';
+import { movie } from './endpoints/movie.js';
+import { person } from './endpoints/person.js';
 import { popular } from './endpoints/popular.js';
-import { getProviders } from './endpoints/providers.js';
-import { getSeason } from './endpoints/season.js';
-import { getShow } from './endpoints/show.js';
+import { providers } from './endpoints/providers.js';
+import { season } from './endpoints/season.js';
+import { show } from './endpoints/show.js';
 
 export class TmdbApi {
 	constructor(params: ThrottledClientParams) {
@@ -21,12 +21,12 @@ export class TmdbApi {
 	changes = changes;
 	company = company;
 	discover = discover;
-	genres = getGenres;
-	languages = getLanguages;
-	movie = getMovie;
-	person = getPerson;
+	genres = genres;
+	languages = languages;
+	movie = movie;
+	person = person;
 	popular = popular;
-	providers = getProviders;
-	season = getSeason;
-	show = getShow;
+	providers = providers;
+	season = season;
+	show = show;
 }

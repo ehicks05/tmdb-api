@@ -13,7 +13,7 @@ import {
 	type Releases,
 	ReleasesSchema,
 } from '../types/movie.js';
-import { toParams } from './utils.js';
+import { logError, toParams } from './utils.js';
 
 export type MovieAppends = {
 	credits?: boolean;
@@ -45,10 +45,11 @@ const getSchema = (appends?: MovieAppends) =>
 			: z.null().optional(),
 	});
 
-export async function getMovie<T extends MovieAppends>({ id, appends }: Params<T>) {
-	const { data } = await client(`/movie/${id}`, toParams(appends));
-
-	const parsed = getSchema(appends).parse(data) as MovieResult<T>;
-
-	return parsed;
+export async function movie<T extends MovieAppends>({ id, appends }: Params<T>) {
+	try {
+		const { data } = await client(`/movie/${id}`, toParams(appends));
+		return getSchema(appends).parse(data) as MovieResult<T>;
+	} catch (error) {
+		logError(error);
+	}
 }
