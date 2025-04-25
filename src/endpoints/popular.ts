@@ -1,8 +1,8 @@
-import { range } from 'lodash-es';
 import { client } from '../client/client.js';
 import { TMDB_PAGE_LIMIT } from '../constants.js';
 import type { PopularPersonPage } from '../types/person.js';
-import { logError } from './utils.js';
+import { logError } from '../utils/error.js';
+import { range } from '../utils/util.js';
 
 export type Resource = 'person';
 

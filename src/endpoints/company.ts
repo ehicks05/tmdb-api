@@ -1,6 +1,6 @@
 import { client } from '../client/client.js';
 import { CompanySchema } from '../types/company.js';
-import { logError } from './utils.js';
+import { logError } from '../utils/error.js';
 
 export const company = async (id: number) => {
 	try {

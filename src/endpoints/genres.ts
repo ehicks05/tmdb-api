@@ -1,6 +1,6 @@
 import { client } from '../client/client.js';
 import { type GenreResponse, GenreResponseSchema } from '../types/genre.js';
-import { logError } from './utils.js';
+import { logError } from '../utils/error.js';
 
 const movieGenres = async () => {
 	const { data } = await client('/genre/movie/list');

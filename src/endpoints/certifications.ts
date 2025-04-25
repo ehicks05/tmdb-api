@@ -1,6 +1,6 @@
 import { client } from '../client/client.js';
 import { CertificationResponseSchema } from '../types/certifications.js';
-import { logError } from './utils.js';
+import { logError } from '../utils/error.js';
 
 export const certifications = async (media: 'movie' | 'tv') => {
 	try {

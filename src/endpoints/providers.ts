@@ -1,6 +1,6 @@
 import { client } from '../client/client.js';
 import { ProviderResponseSchema } from '../types/provider.js';
-import { logError } from './utils.js';
+import { logError } from '../utils/error.js';
 
 export const providers = async () => {
 	try {

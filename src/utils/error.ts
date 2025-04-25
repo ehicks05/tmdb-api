@@ -31,15 +31,3 @@ export const logError = (error: unknown) => {
 		console.log(error);
 	}
 };
-
-export const toParams = (appends?: Record<string, boolean>) =>
-	appends && Object.keys(appends).length > 0
-		? {
-				params: {
-					append_to_response: Object.entries(appends || {})
-						.filter(([, v]) => v)
-						.map(([k]) => k)
-						.join(','),
-				},
-			}
-		: undefined;

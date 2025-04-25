@@ -1,11 +1,16 @@
 import querystring from 'node:querystring';
-import { type Interval, eachYearOfInterval, format, lastDayOfYear } from 'date-fns';
-import { range } from 'lodash-es';
 import { client } from '../client/client.js';
 import { TMDB_PAGE_LIMIT } from '../constants.js';
 import { DiscoverResponseSchema } from '../types/discover.js';
 import type { DiscoverQuery } from '../types/discoverQuery.js';
-import { logError } from './utils.js';
+import {
+	type Interval,
+	eachYearOfInterval,
+	format,
+	lastDayOfYear,
+} from '../utils/date.js';
+import { logError } from '../utils/error.js';
+import { range } from '../utils/util.js';
 
 const fetchAllPages = async (url: string) => {
 	try {
@@ -76,8 +81,8 @@ const handleExhaustive = async ({
 		intervals.map((interval: Interval) => {
 			const qs = querystring.stringify({
 				...query2,
-				[timeFieldGte]: format(interval.start, 'yyyy-MM-dd'),
-				[timeFieldLte]: format(interval.end, 'yyyy-MM-dd'),
+				[timeFieldGte]: format(interval.start),
+				[timeFieldLte]: format(interval.end),
 			});
 
 			return fetchAllPages(`/discover/${media}?${qs}`);

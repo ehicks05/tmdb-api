@@ -9,7 +9,8 @@ import {
 	SeasonImagesSchema,
 	SeasonSchema,
 } from '../types/index.js';
-import { logError, toParams } from './utils.js';
+import { logError } from '../utils/error.js';
+import { toParams } from '../utils/util.js';
 
 export type SeasonAppends = {
 	credits?: boolean;

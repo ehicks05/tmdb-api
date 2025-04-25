@@ -1,6 +1,6 @@
 import { client } from '../client/client.js';
 import { LanguageResponseSchema } from '../types/language.js';
-import { logError } from './utils.js';
+import { logError } from '../utils/error.js';
 
 export const languages = async () => {
 	try {

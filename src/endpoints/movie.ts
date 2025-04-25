@@ -13,7 +13,8 @@ import {
 	type Releases,
 	ReleasesSchema,
 } from '../types/movie.js';
-import { logError, toParams } from './utils.js';
+import { logError } from '../utils/error.js';
+import { toParams } from '../utils/util.js';
 
 export type MovieAppends = {
 	credits?: boolean;

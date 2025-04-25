@@ -13,7 +13,7 @@ test('discover', { timeout: 10_000, concurrent: false }, async () => {
 		},
 	});
 
-	const indianaJones = results.find((o) => o.id === id);
+	const indianaJones = results?.find((o) => o.id === id);
 
 	expect(indianaJones).toBeDefined();
 });
@@ -28,7 +28,7 @@ test('discover exhaustive', { timeout: 10_000, concurrent: false }, async () => 
 		exhaustive: true,
 	});
 
-	const indianaJones = results.find((o) => o.id === id);
+	const indianaJones = results?.find((o) => o.id === id);
 
 	expect(indianaJones).toBeDefined();
 });
