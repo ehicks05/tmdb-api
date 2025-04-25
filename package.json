@@ -19,10 +19,9 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"dotenv": "^16.4.7",
 		"p-map": "^7.0.3",
 		"p-throttle": "^7.0.0",
-		"zod": "^4.0.0-beta.20250417T043022"
+		"zod": "^4.0.0-beta.20250424T163858"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",

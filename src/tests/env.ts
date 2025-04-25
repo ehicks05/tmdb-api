@@ -1,11 +1,9 @@
-import 'dotenv/config';
+const { VITE_TMDB_API_KEY } = process.env;
 
-const { TMDB_API_KEY } = process.env;
-
-if (!TMDB_API_KEY) {
+if (!VITE_TMDB_API_KEY) {
 	throw new Error('missing api key');
 }
 
-const env: { TMDB_API_KEY: string } = { TMDB_API_KEY };
+const env: { TMDB_API_KEY: string } = { TMDB_API_KEY: VITE_TMDB_API_KEY };
 
 export { env };
