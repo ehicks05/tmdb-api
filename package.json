@@ -19,8 +19,6 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"agentkeepalive": "^4.6.0",
-		"axios": "^1.8.4",
 		"dotenv": "^16.4.7",
 		"p-map": "^7.0.3",
 		"p-throttle": "^7.0.0",

@@ -1,33 +1,24 @@
-import axios, { type AxiosError } from 'axios';
 import z, { ZodError } from 'zod';
 
-const logAxiosError = (error: AxiosError) => {
-	const { baseURL, url, params } = error.config || {};
-	const config = { baseURL, url, params };
+interface FetchErrorInfo {
+	path: string;
+	params?: Record<string, string | number | boolean>;
+}
 
-	if (error.response) {
-		// The request was made and the server responded with a status code
-		// that falls out of the range of 2xx
-		const { data, status, headers } = error.response;
-		if ([404, 429].includes(status)) console.log({ status, url: config.url });
-		else console.log({ data, status, config /* headers */ });
-	} else if (error.request) {
-		// The request was made but no response was received
-		// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-		// http.ClientRequest in node.js
-		console.log({ request: error.request, config });
-	} else {
-		// Something happened in setting up the request that triggered an Error
-		console.log({ errorMessage: error.message, config });
+export class FetchError extends Error {
+	info;
+
+	constructor(message: string, info: FetchErrorInfo) {
+		super(message);
+		this.info = info;
 	}
-};
+}
 
 export const logError = (error: unknown) => {
-	if (axios.isAxiosError(error)) {
-		logAxiosError(error);
-	} else if (error instanceof ZodError) {
+	if (error instanceof ZodError) {
 		console.log(z.prettifyError(error));
-	} else {
-		console.log(error);
+	}
+	if (error instanceof FetchError) {
+		console.log(`${error.message}: ${error.info}`);
 	}
 };

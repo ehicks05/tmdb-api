@@ -1,21 +1,24 @@
 import { client } from '../client/client.js';
 import { TMDB_PAGE_LIMIT } from '../constants.js';
-import type { RecentChangesResponse } from '../types/changes.js';
+import {
+	type RecentChangesParams,
+	RecentChangesResponseSchema,
+} from '../types/changes.js';
 import { type Interval, format, subDays } from '../utils/date.js';
 import { logError } from '../utils/error.js';
 import { range } from '../utils/util.js';
 
-const fetchAllPages = async (url: string, params: Record<string, string>) => {
-	const { data } = await client<RecentChangesResponse>(url, { params });
+const fetchAllPages = async (path: string, params: RecentChangesParams) => {
+	const { data } = await client(path, params);
+	const res = RecentChangesResponseSchema.parse(data);
 
-	const lastPage = Math.min(data.total_pages, TMDB_PAGE_LIMIT);
+	const lastPage = Math.min(res.total_pages, TMDB_PAGE_LIMIT);
 
 	const pageResults = await Promise.all(
 		range(1, lastPage + 1).map(async (page) => {
-			const { data } = await client<RecentChangesResponse>(url, {
-				params: { ...params, page },
-			});
-			return data.results.map((o) => o.id);
+			const { data } = await client(path, { ...params, page });
+			const res = RecentChangesResponseSchema.parse(data);
+			return res.results.map((o) => o.id);
 		}),
 	);
 

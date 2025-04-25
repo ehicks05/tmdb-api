@@ -1,4 +1,3 @@
-import querystring from 'node:querystring';
 import { client } from '../client/client.js';
 import { TMDB_PAGE_LIMIT } from '../constants.js';
 import { DiscoverResponseSchema } from '../types/discover.js';
@@ -12,16 +11,19 @@ import {
 import { logError } from '../utils/error.js';
 import { range } from '../utils/util.js';
 
-const fetchAllPages = async (url: string) => {
+const fetchAllPages = async (
+	path: string,
+	query: Record<string, string | number | boolean>,
+) => {
 	try {
-		const { data } = await client(url);
-
-		const lastPage = Math.min(data.total_pages, TMDB_PAGE_LIMIT);
+		const { data } = await client(path, query);
+		const res = DiscoverResponseSchema.parse(data);
+		const lastPage = Math.min(res.total_pages, TMDB_PAGE_LIMIT);
 
 		const resultPages = await Promise.all(
 			range(1, lastPage + 1).map(async (page) => {
 				try {
-					const { data } = await client(`${url}&page=${page}`);
+					const { data } = await client(path, { ...query, page });
 					return DiscoverResponseSchema.parse(data).results;
 				} catch (error) {
 					logError(error);
@@ -79,13 +81,11 @@ const handleExhaustive = async ({
 
 	const resultsByYear = await Promise.all(
 		intervals.map((interval: Interval) => {
-			const qs = querystring.stringify({
+			return fetchAllPages(`/discover/${media}`, {
 				...query2,
 				[timeFieldGte]: format(interval.start),
 				[timeFieldLte]: format(interval.end),
 			});
-
-			return fetchAllPages(`/discover/${media}?${qs}`);
 		}),
 	);
 
@@ -113,8 +113,7 @@ export const discover = async ({
 		}
 
 		// non-exhaustive mode
-		const qs = querystring.stringify(query);
-		return fetchAllPages(`/discover/${media}?${qs}`);
+		return fetchAllPages(`/discover/${media}`, query);
 	} catch (error) {
 		logError(error);
 	}

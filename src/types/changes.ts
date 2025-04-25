@@ -1,11 +1,20 @@
 import { z } from 'zod';
 import { PageSchema } from './page.js';
 
+export const RecentChangesParamsSchema = z
+	.object({
+		end_date: z.iso.date(),
+		page: z.number(),
+		start_date: z.iso.date(),
+	})
+	.partial();
+export type RecentChangesParams = z.infer<typeof RecentChangesParamsSchema>;
+
 export const RecentChangesResponseSchema = PageSchema.extend({
 	results: z.array(
 		z.object({
 			id: z.number(),
-			adult: z.boolean(),
+			adult: z.boolean().nullable(),
 		}),
 	),
 });
