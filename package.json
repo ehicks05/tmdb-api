@@ -1,6 +1,6 @@
 {
 	"name": "@ehicks05/tmdb-api",
-	"version": "0.1.7",
+	"version": "0.1.8",
 	"description": "",
 	"repository": {
 		"url": "https://github.com/ehicks05/tmdb-api"
@@ -13,7 +13,7 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "tsup",
+		"build": "tsup --watch",
 		"test": "vitest"
 	},
 	"author": "",
