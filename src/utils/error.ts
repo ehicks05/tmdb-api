@@ -17,8 +17,7 @@ export class FetchError extends Error {
 export const logError = (error: unknown) => {
 	if (error instanceof ZodError) {
 		console.log(z.prettifyError(error));
-	}
-	if (error instanceof FetchError) {
+	} else if (error instanceof FetchError) {
 		console.log(`${error.message}: ${error.info}`);
-	}
+	} else console.log(error);
 };
