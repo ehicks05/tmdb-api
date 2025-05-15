@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod/v4';
 import { MediaSchema } from './mediabase.js';
 import { MovieSchema } from './movie.js';
 import { ShowSchema } from './show.js';
@@ -32,7 +32,7 @@ const MovieCreditSchema = PersonCreditBaseSchema.extend(
 		release_date: true,
 		title: true,
 		video: true,
-	}),
+	}).shape,
 );
 
 // fields for a person's show credit
@@ -43,17 +43,17 @@ const TvCreditSchema = PersonCreditBaseSchema.extend(
 		name: true,
 	}).extend({
 		episode_count: z.number(),
-	}),
+	}).shape,
 );
 
 export const MovieCreditsSchema = z.object({
-	cast: z.array(MovieCreditSchema.extend(CastSchema)),
-	crew: z.array(MovieCreditSchema.extend(CrewSchema)),
+	cast: z.array(MovieCreditSchema.extend(CastSchema.shape)),
+	crew: z.array(MovieCreditSchema.extend(CrewSchema.shape)),
 });
 export type MovieCredits = z.infer<typeof MovieCreditsSchema>;
 
 export const TvCreditsSchema = z.object({
-	cast: z.array(TvCreditSchema.extend(CastSchema.omit({ order: true }))),
-	crew: z.array(TvCreditSchema.extend(CrewSchema)),
+	cast: z.array(TvCreditSchema.extend(CastSchema.omit({ order: true }).shape)),
+	crew: z.array(TvCreditSchema.extend(CrewSchema.shape)),
 });
 export type TvCredits = z.infer<typeof TvCreditsSchema>;

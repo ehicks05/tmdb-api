@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod/v4';
 import { MediaSchema } from './mediabase.js';
 import { MovieSchema } from './movie.js';
 import { PageSchema } from './page.js';
@@ -22,7 +22,7 @@ export const DiscoverMovieSchema = DiscoverMedia.extend(
 		release_date: true,
 		title: true,
 		video: true,
-	}),
+	}).shape,
 );
 
 export const DiscoverShowSchema = DiscoverMedia.extend(
@@ -31,7 +31,7 @@ export const DiscoverShowSchema = DiscoverMedia.extend(
 		name: true,
 		origin_country: true,
 		original_name: true,
-	}),
+	}).shape,
 );
 
 export const DiscoverResponseSchema = PageSchema.extend({
