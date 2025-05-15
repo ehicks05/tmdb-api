@@ -1,4 +1,4 @@
-import z, { ZodError } from 'zod';
+import z from 'zod/v4';
 
 interface FetchErrorInfo {
 	path: string;
@@ -14,8 +14,13 @@ export class FetchError extends Error {
 	}
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+function instanceOfZodError(object: any): object is z.ZodError {
+	return 'issues' in object;
+}
+
 export const logError = (error: unknown) => {
-	if (error instanceof ZodError) {
+	if (instanceOfZodError(error)) {
 		console.log(z.prettifyError(error));
 	} else if (error instanceof FetchError) {
 		console.log(`${error.message}: ${error.info}`);
