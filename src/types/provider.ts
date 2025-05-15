@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const ProviderSchema = z.object({
 	display_priorities: z.record(z.string(), z.number()), // country code to priority

@@ -1,23 +1,23 @@
 import { test } from 'vitest';
-import z from 'zod';
+import { z } from 'zod/v4';
 
 test('zod playground', { skip: true }, () => {
-	const Schema = z.object({
-		date: z.date(),
-		stringDate: z.iso.date(),
-		stringDateTime: z.iso.datetime(),
-		stringTime: z.iso.time(),
+	const Foo = z.object({
+		foo: z.string(),
 	});
-	type foo = z.infer<typeof Schema>;
+	const Bar = z.object({
+		bar: z.string(),
+	});
+
+	const Baz = Foo.extend(Bar.shape);
+	const Buzz = z.object({ ...Foo.shape, ...Bar.shape });
 
 	const obj = {
-		date: new Date(),
-		stringDate: '2024-12-01',
-		stringDateTime: '2024-12-01T15:12:05.123Z',
-		stringTime: '15:12:05.123',
+		foo: 'foo',
+		bar: 'bar',
 	};
 
-	const { data, error } = Schema.safeParse(obj);
+	const { data, error } = Baz.safeParse(obj);
 	if (error) {
 		console.log(z.prettifyError(error));
 		return;

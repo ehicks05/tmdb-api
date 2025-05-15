@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod/v4';
 import { client } from '../client/client.js';
 import { type Credits, CreditsSchema } from '../types/credits.js';
 import {

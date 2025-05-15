@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { ProductionCompanySchema } from './company.js';
 import { GenreSchema } from './genre.js';
 import { LanguageSchema } from './language.js';

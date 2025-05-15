@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { PersonSchema } from './person.js';
 
 // fields common to both cast and crew credits

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { PageSchema } from './page.js';
 
 export const RecentChangesParamsSchema = z

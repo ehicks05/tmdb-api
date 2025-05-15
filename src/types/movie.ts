@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { MediaSchema, MovieStatusEnum } from './mediabase.js';
 
 export const ReleaseTypeEnum = z.enum([

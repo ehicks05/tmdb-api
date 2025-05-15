@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { CastCreditSchema, CreditsSchema, CrewCreditSchema } from './credits.js';
 
 export const EpisodeSchema = z.object({

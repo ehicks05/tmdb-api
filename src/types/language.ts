@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const LanguageSchema = z.object({
 	iso_639_1: z.string(),

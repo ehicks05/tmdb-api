@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { NetworkSchema } from './company.js';
 import { MediaSchema, ShowStatusEnum } from './mediabase.js';
 import { CreatorSchema } from './person.js';
