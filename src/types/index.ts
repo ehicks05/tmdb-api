@@ -1,6 +1,9 @@
+export * from './certifications.js';
 export * from './changes.js';
 export * from './company.js';
 export * from './credits.js';
+export * from './discover.js';
+export * from './discoverQuery.js';
 export * from './genre.js';
 export * from './images.js';
 export * from './language.js';
@@ -8,6 +11,7 @@ export * from './media.js';
 export * from './mediabase.js';
 export * from './mediaCredits.js';
 export * from './movie.js';
+export * from './page.js';
 export * from './person.js';
 export * from './provider.js';
 export * from './season.js';
