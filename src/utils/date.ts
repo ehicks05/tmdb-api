@@ -1,11 +1,6 @@
 export type Interval = { start: Date; end: Date };
 
-export const format = (date: Date) =>
-	[
-		date.getFullYear(),
-		`0${date.getMonth() + 1}`.slice(-2),
-		`0${date.getDate()}`.slice(-2),
-	].join('-');
+export const toISODateString = (date: Date) => date.toISOString().slice(0, 10);
 
 export const subDays = (date: Date, i: number) =>
 	new Date(date.setDate(date.getDate() - i));

@@ -4,7 +4,7 @@ import {
 	type RecentChangesParams,
 	RecentChangesResponseSchema,
 } from '../types/changes.js';
-import { type Interval, format, subDays } from '../utils/date.js';
+import { type Interval, toISODateString, subDays } from '../utils/date.js';
 import { logError } from '../utils/error.js';
 import { range } from '../utils/util.js';
 
@@ -31,8 +31,8 @@ const INTERVAL = { start: subDays(new Date(), 1), end: new Date() };
 export const changes = async (resource: Resource, interval: Interval = INTERVAL) => {
 	try {
 		const results = await fetchAllPages(`/${resource}/changes`, {
-			start_date: format(interval.start),
-			end_date: format(interval.end),
+			start_date: toISODateString(interval.start),
+			end_date: toISODateString(interval.end),
 		});
 		return results;
 	} catch (error) {
