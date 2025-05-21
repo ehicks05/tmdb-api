@@ -72,7 +72,7 @@ const handleExhaustive = async ({
 	const timeFieldGte =
 		media === 'movie' ? 'primary_release_date.gte' : 'first_air_date.gte';
 	const timeFieldLte =
-		media === 'movie' ? 'primary_release_date.gte' : 'first_air_date.lte';
+		media === 'movie' ? 'primary_release_date.lte' : 'first_air_date.lte';
 
 	const { page, ...query2 } = query;
 
